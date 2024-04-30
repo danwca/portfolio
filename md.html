@@ -31,7 +31,7 @@
             })
             .then(markdownContent => {
                 // Convert Markdown to HTML
-                const htmlContent = marked(markdownContent);
+                const htmlContent = marked.parse(markdownContent);
 
                 // Display the HTML content
                 document.getElementById('markdown-content').innerHTML = htmlContent;
