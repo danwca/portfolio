@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github Markdown Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="markdown-content">md file</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Replace 'USERNAME', 'REPO', and 'FILENAME' with actual values
+        const username = 'danwca';
+        const repo = 'danwca.github.io';
+        const filename = 'README.md';
+
+        // Fetch the Markdown file content from GitHub using fetch API
+        fetch(`https://raw.githubusercontent.com/${username}/${repo}/main/${filename}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch Markdown file: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(markdownContent => {
+                // Convert Markdown to HTML
+                const htmlContent = marked(markdownContent);
+
+                // Display the HTML content
+                document.getElementById('markdown-content').innerHTML = htmlContent;
+            })
+            .catch(error => {
+                console.error('Error fetching and rendering Markdown file:', error);
+                document.getElementById('markdown-content').innerHTML = 'Error fetching and rendering Markdown file';
+            });
+    </script>
+</body>
+</html>
