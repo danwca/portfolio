@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.7522ebae.css",
-    "main.js": "/static/js/main.10b64caf.js",
-    "static/media/dp.jpeg": "/static/media/dp.f33d7e8020fbc5240d24.jpeg",
-    "static/media/kindpng_2158189.png": "/static/media/kindpng_2158189.84e4b1cbbc313949056f.png",
-    "static/media/universityLogo.png": "/static/media/universityLogo.f37fb825fa8f18a1bf96.png",
-    "static/media/project-cover10.png": "/static/media/project-cover10.aee0f771fbfc1e7b8fa8.png",
-    "index.html": "/index.html",
-    "main.7522ebae.css.map": "/static/css/main.7522ebae.css.map",
-    "main.10b64caf.js.map": "/static/js/main.10b64caf.js.map"
+    "main.css": "/portfolio/static/css/main.7522ebae.css",
+    "main.js": "/portfolio/static/js/main.02d674c5.js",
+    "static/media/dp.jpeg": "/portfolio/static/media/dp.f33d7e8020fbc5240d24.jpeg",
+    "static/media/kindpng_2158189.png": "/portfolio/static/media/kindpng_2158189.84e4b1cbbc313949056f.png",
+    "static/media/universityLogo.png": "/portfolio/static/media/universityLogo.f37fb825fa8f18a1bf96.png",
+    "static/media/project-cover10.png": "/portfolio/static/media/project-cover10.aee0f771fbfc1e7b8fa8.png",
+    "index.html": "/portfolio/index.html",
+    "main.7522ebae.css.map": "/portfolio/static/css/main.7522ebae.css.map",
+    "main.02d674c5.js.map": "/portfolio/static/js/main.02d674c5.js.map"
   },
   "entrypoints": [
     "static/css/main.7522ebae.css",
-    "static/js/main.10b64caf.js"
+    "static/js/main.02d674c5.js"
   ]
 }
