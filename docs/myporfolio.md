@@ -7,7 +7,7 @@
    ---
    
    
-# My Projects
+# My Projects {template = projects}
 
 This is a paragraph with a [link](https://example.com).
 
