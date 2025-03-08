@@ -1,10 +1,10 @@
 
 
-   ---
-   title: About Me
-   author: John Doe
-   date: 2023-10-01
-   ---
+---
+title: About Me
+author: John Doe
+date: 2023-10-01
+---
    
    
 # My Projects {component = projects}
@@ -34,7 +34,14 @@ This is a paragraph with a [link](https://example.com).
 `​`​`  
 4. 空标题的连接： [ ](这段由方括号和连接组成的内容不会在渲染后显示)
 5. 双百分号： %%某些 Wiki 风格的隐藏内容%%
-
+6. HTML 的 <script>、<style> 等标签， 未支持的 HTML 标签： <script>alert("不会显示");</script> ， <style>body { display: none; }</style>
+7. Smarty 或 BBCode 之类的自定义标记（未经解析的情况下）： [customTag]不会显示[/customTag]
+8. 空的代码块
+9. YAML Front Matter： 
+---
+title: "My Page"
+date: 2024-03-08
+---  
 
 
 # About Me {component=aboutMe}
