@@ -26,6 +26,12 @@ This is a paragraph with a [link](https://example.com).
 2. bye
 
 <!-- 这个内容不会在页面上显示 --> 
+<span style="display:none">这段内容不会显示</span>
+`​`​`
+这段内容在 GitHub 页面上不会直接显示
+`​`​`
+
+
 
 # About Me {component=aboutMe}
     firstName: "Daniel",
