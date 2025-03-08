@@ -26,10 +26,16 @@ This is a paragraph with a [link](https://example.com).
 2. bye
 
 <!-- 这个HTML注释的内容不会在页面上显示 --> 
+
+
 <span style="display:none">这段span内容不会显示</span>
+
+
 `​`​`
-这段在代码标识中的内容在 GitHub 页面上不会直接显示
+这段在代码标识中的内容在 GitHub 页面上不会直接显示； GitHub 不会渲染单行的空代码块，但代码仍然存在源文件中；
 `​`​`
+
+
 [ ](这段由方括号和连接组成的内容不会在渲染后显示)
 
 
