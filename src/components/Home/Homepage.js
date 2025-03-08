@@ -7,7 +7,12 @@ const Homepage = () => {
 
     useEffect(() => {
         // Fetch the README.md file from the GitHub repository
-        fetch('https://api.github.com/repos/danwca/portfolio/docs/myportfolio', {
+		const owner = 'danwca';
+		const repo = 'portfolio';
+		const filePath = 'docs/myporfolio.md';
+		const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`;
+        // fetch('https://api.github.com/repos/danwca/portfolio/docs/myportfolio', {
+        fetch(url, {
             headers: {
                 Accept: 'application/vnd.github.v3.raw', // Request raw content
             },
