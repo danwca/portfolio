@@ -1,0 +1,43 @@
+.home-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.home-container h1, .home-container h2, .home-container h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.home-container p {
+    margin-bottom: 1em;
+}
+
+.home-container a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.home-container a:hover {
+    text-decoration: underline;
+}
+
+.home-container code {
+    background-color: #f6f8fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.home-container pre {
+    background-color: #f6f8fa;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.home-container pre code {
+    background-color: transparent;
+    padding: 0;
+}
