@@ -1,5 +1,3 @@
-
-
 ---
 title: About Me
 author: John Doe
