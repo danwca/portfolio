@@ -25,10 +25,10 @@ This is a paragraph with a [link](https://example.com).
 1. hello
 2. bye
 
-<!-- 这个内容不会在页面上显示 --> 
-<span style="display:none">这段内容不会显示</span>
+<!-- 这个HTML注释的内容不会在页面上显示 --> 
+<span style="display:none">这段span内容不会显示</span>
 `​`​`
-这段内容在 GitHub 页面上不会直接显示
+这段在代码标识中的内容在 GitHub 页面上不会直接显示
 `​`​`
 
 
