@@ -1,7 +1,6 @@
-# Daniel Wang's Portfolio
+# Portfolio - an open source project
 
-Welcome to my professional portfolio! This repository showcases my skills, projects, and achievements. Feel free to explore the code and projects listed here.
-
+aim to help people who are looking for jobs, want a public resume page
 
 ## Table of Contents
 
@@ -17,7 +16,16 @@ Connect with me! Feel free to reach out for collaboration, job opportunities, or
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+absolutely free for code, copy, modify, dispatch, clone, donate, and more,  
 
 ---
 
-Thank you for visiting my portfolio! If you find it interesting, don't forget to ⭐️ the repository.
+
+## credit
+1. the original version,  
+
+## ways to help the project:
+1. ⭐️ the repository. 
+2. leave your comments
+3. donate to me
+
