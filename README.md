@@ -27,5 +27,5 @@ absolutely free for code, copy, modify, dispatch, clone, donate, and more,
 ## ways to help the project:
 1. ⭐️ the repository. 
 2. leave your comments
-3. donate to me
+3. donate to the project
 
