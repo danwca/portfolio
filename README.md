@@ -2,7 +2,11 @@
 
 aim to help people who are looking for jobs, want a public resume page
 
+
 ## Table of Contents
+
+## status of the project
+1. under going for the first release version
 
 
 ## Contact
