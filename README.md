@@ -16,7 +16,7 @@ Connect with me! Feel free to reach out for collaboration, job opportunities, or
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-absolutely free for code, copy, modify, dispatch, clone, donate, and more,  
+absolutely free for code, copy, modify, dispatch, clone, donate, and more,  but let me know if you are succeed, ... 
 
 ---
 
