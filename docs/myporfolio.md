@@ -21,7 +21,7 @@ This is the navbar content.
 
 This is a paragraph with a [link](https://example.com).
 
-<!-- component:projects -->
+<!-- component:project.projects -->
 ## Project 1
 - **Title**: Project 1
 - **Description**: This is a description of Project 1.
