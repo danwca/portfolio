@@ -5,7 +5,7 @@ date: 2023-10-01
 ---
    
    
-# My Projects {component = projects}
+# My Projects {component = project.projects}
 
 This is a paragraph with a [link](https://example.com).
 
