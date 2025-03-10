@@ -42,11 +42,10 @@ const parseMarkdown = (markdown) => {
 };
 
 const App = () => {
-    const [mdcontent, setMdcontent] = useState('');
-    const [templateVariables, setTemplateVariables] = useState({});
+    const [mdcontent, setMdcontent] = useState([]);
 
     useEffect(() => {
-        const { templatesPath, componentsPath, docsPath, defaultTemplate } = config;
+        const { templatesPath, docsPath } = config;
 
         // 加载模板默认变量
         axios.get(`${templatesPath}/template.md`)
@@ -68,10 +67,14 @@ const App = () => {
                         };
 
                         // 解析各个部分
-                        let content = '';
+                        const content = [];
                         const componentPromises = sections.map((section) => {
                             if (section.type === 'markdown') {
-                                content += <ReactMarkdown>{section.content}</ReactMarkdown>;
+                                content.push(
+                                    <ReactMarkdown key={content.length}>
+                                        {section.content}
+                                    </ReactMarkdown>
+                                );
                                 return Promise.resolve();
                             } else if (section.type === 'component') {
                                 // 动态加载组件
@@ -79,8 +82,8 @@ const App = () => {
                                 return import(`./components/${category}/${componentName}`)
                                     .then((module) => {
                                         const Component = module.default;
-                                        content += ReactDOMServer.renderToString(
-                                            React.createElement(Component, { content: section.content })
+                                        content.push(
+                                            <Component key={content.length} content={section.content} />
                                         );
                                     })
                                     .catch((error) => {
@@ -92,9 +95,6 @@ const App = () => {
 
                         // 等待所有组件加载完成
                         Promise.all(componentPromises).then(() => {
-                            // 设置模板变量
-                            setTemplateVariables(variables);
-
                             // 设置页面内容
                             setMdcontent(content);
                         });
@@ -110,7 +110,7 @@ const App = () => {
 
     return (
         <div>
-            {mdcontent ? (
+            {mdcontent.length > 0 ? (
                 <div>{mdcontent}</div>
             ) : (
                 <p>Loading...</p>
