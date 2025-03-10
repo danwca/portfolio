@@ -1,6 +1,6 @@
 {
-  "templatesPath": "/templates/default",
+  "templatesPath": "https://raw.githubusercontent.com/danwca/portfolio/main/templates",
   "componentsPath": "/components",
-  "docsPath": "https://raw.githubusercontent.com/username/repository/main/docs",
+  "docsPath": "https://raw.githubusercontent.com/danwca/portfolio/main/docs",
   "defaultTemplate": "default"
 }
