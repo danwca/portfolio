@@ -86,7 +86,8 @@ const App = () => {
 									componentName = category;
 									//category = category;
 								}								
-                                return import(`./components/${category}/${componentName}`)
+                                console.log('loading component: ', `./components/${category}/${componentName}`);
+                                return import(`./components/${category}/${componentName}.js`)
                                     .then((module) => {
                                         const Component = module.default;
                                         content.push(
