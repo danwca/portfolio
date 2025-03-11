@@ -5,15 +5,34 @@ import projectCoverImg from "../asset/project-cover10.png";
 import ProjectItem from "./ProjectItem";
 import ProjectsData from "../Data/ProjectsData";
 import SocialData from "../Data/SocialData";
-import Button from "../default/UI/Button";
+import Button from "../UI/Button";
 
 import ProgrammingSkills from "../Professional Skillset/ProgrammingSkills";
 import { useSelector } from "react-redux";
 
-const Projects = (props) => {
+const Projects = ({ content }) => {
     const nonThemeColor = useSelector(state => state.nonThemeColor);
     const uiColor = useSelector(state => state.uiColor);
-    let projects = ProjectsData.DUMMY_PROJECTS;
+
+    const lines = content.split('\n');
+    let currentProject = null;
+    const projects = [];
+
+    lines.forEach((line) => {
+        if (line.startsWith('## ')) {
+            if (currentProject) {
+                projects.push(currentProject);
+            }
+            currentProject = { title: line.replace('## ', '').trim(), description: '', link: '' };
+        } else if (line.startsWith('- **Title**:')) {
+            currentProject.title = line.replace('- **Title**:', '').trim();
+        } else if (line.startsWith('- **Description**:')) {
+            currentProject.description = line.replace('- **Description**:', '').trim();
+        } else if (line.startsWith('- **Link**:')) {
+            currentProject.link = line.replace('- **Link**:', '').trim();
+        }
+    });
+	
     return (
         <div id="projects">
             <div className={styles.projects}>
@@ -25,7 +44,7 @@ const Projects = (props) => {
                     <div>My works makes use of vast variety of latest technology tools. My best experience is to create React projects and deploy them to web applications using Github Pages.</div>
                 </section>
             </div>
-            <ProgrammingSkills />
+\
             <h1 className={styles.projectHeading} style={{ color: nonThemeColor }}>My Projects</h1>
             <div className={styles.projectList}>
                 {projects.map((item, index) => {

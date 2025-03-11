@@ -39,7 +39,6 @@ const AboutMe = ({ content }) => {
                     </a>
                 </div>
             </div>
-            <GetInTouch />
         </Fragment>
     )
 };

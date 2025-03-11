@@ -4,6 +4,8 @@ import ReactMarkdown from 'react-markdown';
 import frontMatter from 'front-matter';
 import ReactDOMServer from 'react-dom/server';
 import config from './config.json';
+import { setUiColor, setNonThemeColor, setBackgroundColor } from './actions'; // 确保已经定义了 Actions
+import { useDispatch } from 'react-redux';
 
 // 解析 markdown 文件
 const parseMarkdown = (markdown) => {
@@ -45,9 +47,15 @@ const parseMarkdown = (markdown) => {
 
 const App = () => {
     const [mdcontent, setMdcontent] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const { templatesPath, docsPath } = config;
+
+        // 初始化 Redux 状态
+        dispatch(setUiColor('#00ff00')); // 设置 UI 颜色
+        dispatch(setNonThemeColor('#000000')); // 设置非主题颜色
+        dispatch(setBackgroundColor('#ffffff')); // 设置背景颜色
 
         // 加载模板默认变量
         axios.get(`${templatesPath}/template.md`)
@@ -87,7 +95,7 @@ const App = () => {
 									//category = category;
 								}								
                                 console.log('loading component: ', `./components/${category}/${componentName}`);
-                                return import(`./components/${category}/${componentName}.js`)
+                                return import(`./components/${category}/${componentName}`)
                                     .then((module) => {
                                         const Component = module.default;
                                         content.push(
@@ -114,7 +122,7 @@ const App = () => {
             .catch((error) => {
                 console.error('Error loading template defaults:', error);
             });
-    }, []);
+    }, [dispatch]);
 
     return (
         <div>

@@ -12,7 +12,7 @@ import Routes from "./Routes";
 
 import PersonalData from "../Data/PersonalData";
 
-const Navbar = () => {
+const Navbar = ({ content }) => {
 
     const menuRef = useRef();
     const dispatch = useDispatch();
@@ -22,7 +22,12 @@ const Navbar = () => {
         dispatch(themeActions.changeThemeColor(newColor));
     }
 
-    const mode = useSelector(state => state.mode);
+    //const mode = useSelector(state => state.mode);
+	const mode = useSelector(state => {
+		console.log(state); // 打印状态
+		return state.mode;
+	});
+    //console.log(mode); // 打印状态
     useEffect(()=>{
         if(mode==="dark"){
             const lightModeBtn = document.getElementById("lightModeBtn")

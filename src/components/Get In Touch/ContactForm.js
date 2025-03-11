@@ -6,7 +6,7 @@ import Button from "../UI/Button";
 import useInput from "../../hooks/useInput";
 import { useSelector } from "react-redux";
 
-const ContactForm = (props) => {
+const ContactForm = ({ content }) => {
 
     const [isEntering, setIsEntering] = useState(false);
 
