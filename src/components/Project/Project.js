@@ -3,9 +3,9 @@ import React from "react";
 import styles from "./project.module.css";
 import projectCoverImg from "../asset/project-cover10.png";
 import ProjectItem from "./ProjectItem";
-import ProjectsData from "../../Data/ProjectsData";
-import SocialData from "../../Data/SocialData";
-import Button from "../UI/Button";
+import ProjectsData from "../Data/ProjectsData";
+import SocialData from "../Data/SocialData";
+import Button from "../default/UI/Button";
 
 import ProgrammingSkills from "../Professional Skillset/ProgrammingSkills";
 import { useSelector } from "react-redux";

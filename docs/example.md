@@ -5,7 +5,7 @@ author: John Doe
 date: 2023-10-01
 ---
 
-<!-- component:navbar -->
+<!-- component:Navbar.Navbar -->
 This is the navbar content.
 <!-- /component -->
 
@@ -13,7 +13,7 @@ This is the navbar content.
 
 This is a paragraph with a [link](https://example.com).
 
-<!-- component:projects -->
+<!-- component:project.projects -->
 ## Project 1
 - **Title**: Project 1
 - **Description**: This is a description of Project 1.
@@ -25,7 +25,7 @@ This is a paragraph with a [link](https://example.com).
 - **Link**: https://example.com/project2
 <!-- /component -->
 
-<!-- component:aboutMe -->
+<!-- component:AboutMe.AboutMe -->
 firstName: "Daniel",
 lastName: "Wang",
 nickName: "< Doctor Dan >",

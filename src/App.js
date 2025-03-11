@@ -9,13 +9,14 @@ import config from './config.json';
 const parseMarkdown = (markdown) => {
     const { attributes, body } = frontMatter(markdown);
     const sections = [];
-    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
+    const componentRegex = /<!--\s*component:([a-zA-Z0-9_\-\.]+)\s*-->(.*?)<!--\s*\/component\s*-->/sg;
 
     // 分解 markdown 内容
     let lastIndex = 0;
     let match;
     while ((match = componentRegex.exec(body)) !== null) {
         // 普通 markdown 内容
+		console.log('matching component:', match);
         if (match.index > lastIndex) {
             sections.push({
                 type: 'markdown',
@@ -30,6 +31,7 @@ const parseMarkdown = (markdown) => {
         });
         lastIndex = match.index + match[0].length;
     }
+
     // 剩余的普通 markdown 内容
     if (lastIndex < body.length) {
         sections.push({
@@ -78,7 +80,12 @@ const App = () => {
                                 return Promise.resolve();
                             } else if (section.type === 'component') {
                                 // 动态加载组件
-                                const [category, componentName] = section.name.split('.');
+                                let [category, componentName] = section.name.split('.');
+                                console.log('component: ', section, ' : ', category, ' - ', componentName);
+								if (componentName === undefined) {
+									componentName = category;
+									//category = category;
+								}								
                                 return import(`./components/${category}/${componentName}`)
                                     .then((module) => {
                                         const Component = module.default;

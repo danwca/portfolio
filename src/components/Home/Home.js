@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import Typewriter from 'typewriter-effect/dist/core';
 import profileAvatar from "../asset/logo.png";
-import PersonalData from "../../Data/PersonalData";
+import PersonalData from "../Data/PersonalData";
 import classes from "./home.module.css";
-import { autoTypeData } from "../../Data/PersonalData";
+import { autoTypeData } from "../Data/PersonalData";
 
 import SocialLinks from "../SocialLinks/SocialLinks";
 import { useSelector } from "react-redux";

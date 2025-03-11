@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Button from "../UI/Button";
 import classes from "./createCertificate.module.css"
 import { Udemy } from "../asset/svg/svg";
-import ThemeData from "../../Data/ThemeData";
+import ThemeData from "../Data/ThemeData";
 
 const CreateCertificate = (props) => {
     const nonThemeColor = useSelector(state => state.nonThemeColor);

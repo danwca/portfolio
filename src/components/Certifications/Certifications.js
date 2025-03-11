@@ -2,7 +2,7 @@ import React from "react";
 
 import classes from "./certifications.module.css";
 import CreateCertificate from "./CreateCertificate";
-import CertificatesData from "../../Data/CertificatesData"
+import CertificatesData from "../Data/CertificatesData"
 import { useSelector } from "react-redux";
 const Certifications = (props) => {
 
