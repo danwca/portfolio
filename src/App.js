@@ -2,23 +2,69 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import frontMatter from 'front-matter';
-import ReactDOMServer from 'react-dom/server';
 import config from './config.json';
-import { setUiColor, setNonThemeColor, setBackgroundColor } from './actions'; // 确保已经定义了 Actions
-import { useDispatch } from 'react-redux';
+
+// 动态加载模板
+const loadTemplate = async (templateName) => {
+    try {
+        // 尝试加载模板的驱动文件
+        const templateModule = await import(`./templates/${templateName}.js`);
+        return templateModule.default;
+    } catch (error) {
+        // 如果模板没有驱动文件，则使用全局的 default.js
+        console.warn(`No custom driver for template ${templateName}, using global default.`);
+        const globalDefault = await import('./templates/default.js');
+        return globalDefault.default;
+    }
+};
+
+// 加载模板的静态资源
+const loadTemplateAssets = (templateName) => {
+    const cssPath = `${process.env.PUBLIC_URL}/${templateName}/styles.css`;
+    const jsPath = `${process.env.PUBLIC_URL}/${templateName}/script.js`;
+
+    // 动态加载 CSS
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = cssPath;
+    document.head.appendChild(link);
+
+    // 动态加载 JS
+    const script = document.createElement('script');
+    script.src = jsPath;
+    document.body.appendChild(script);
+};
+
+// 加载模板的默认变量
+const loadTemplateVariables = async (templateName) => {
+    try {
+        const response = await import(`./templates/${templateName}/tempvars.md`);
+        const { attributes } = frontMatter(response.data);
+        return attributes;
+    } catch (error) {
+        console.error(`Error loading template variables for ${templateName}:`, error);
+        return {};
+    }
+};
+
+
+// 动态加载组件
+const loadComponent = async (section) => {
+
+};
+
 
 // 解析 markdown 文件
 const parseMarkdown = (markdown) => {
     const { attributes, body } = frontMatter(markdown);
     const sections = [];
-    const componentRegex = /<!--\s*component:([a-zA-Z0-9_\-\.]+)\s*-->(.*?)<!--\s*\/component\s*-->/sg;
+    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
 
     // 分解 markdown 内容
     let lastIndex = 0;
     let match;
     while ((match = componentRegex.exec(body)) !== null) {
         // 普通 markdown 内容
-		console.log('matching component:', match);
         if (match.index > lastIndex) {
             sections.push({
                 type: 'markdown',
@@ -33,7 +79,6 @@ const parseMarkdown = (markdown) => {
         });
         lastIndex = match.index + match[0].length;
     }
-
     // 剩余的普通 markdown 内容
     if (lastIndex < body.length) {
         sections.push({
@@ -46,47 +91,46 @@ const parseMarkdown = (markdown) => {
 };
 
 const App = () => {
-    const [mdcontent, setMdcontent] = useState([]);
-    const dispatch = useDispatch();
+    const [content, setContent] = useState(null);
+    const { docsPath } = config;
 
     useEffect(() => {
-        const { templatesPath, docsPath } = config;
+        // 加载 markdown 文件
+        axios.get(`${docsPath}/example.md`)
+            .then(async (response) => {
+                const markdownContent = response.data;
 
-        // 初始化 Redux 状态
-        dispatch(setUiColor('#00ff00')); // 设置 UI 颜色
-        dispatch(setNonThemeColor('#000000')); // 设置非主题颜色
-        dispatch(setBackgroundColor('#ffffff')); // 设置背景颜色
+                // 解析 markdown 文件
+                const { attributes, sections } = parseMarkdown(markdownContent);
 
-        // 加载模板默认变量
-        axios.get(`${templatesPath}/template.md`)
-            .then((response) => {
-                const templateDefaults = frontMatter(response.data).attributes;
+                // 动态加载模板
+                const templateName = attributes.template || config.defaultTemplate;
+                const Template = await loadTemplate(templateName);
+                if (!Template) {
+                    throw new Error('Template not found');
+                }
 
-                // 加载 markdown 文件
-                axios.get(`${docsPath}/example.md`)
-                    .then((response) => {
-                        const markdownContent = response.data;
+                // 加载模板的静态资源
+                loadTemplateAssets(templateName);
 
-                        // 解析 markdown 文件
-                        const { attributes, sections } = parseMarkdown(markdownContent);
+                // 加载模板的默认变量
+                const templateVariables = await loadTemplateVariables(templateName);
 
-                        // 合并模板变量
-                        const variables = {
-                            ...templateDefaults,
-                            ...attributes,
-                        };
+                // 合并模板变量
+                const variables = {
+                    ...templateVariables,
+                    ...attributes,
+                };
 
-                        // 解析各个部分
-                        const content = [];
-                        const componentPromises = sections.map((section) => {
-                            if (section.type === 'markdown') {
-                                content.push(
-                                    <ReactMarkdown key={content.length}>
-                                        {section.content}
-                                    </ReactMarkdown>
-                                );
-                                return Promise.resolve();
-                            } else if (section.type === 'component') {
+                // 解析各个部分
+                const parsedSections = await Promise.all(
+                    sections.map(async (section) => {
+                        if (section.type === 'markdown') {
+                            return {
+                                type: 'markdown',
+                                content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                            };
+                        } else if (section.type === 'component') {
                                 // 动态加载组件
                                 let [category, componentName] = section.name.split('.');
                                 console.log('component: ', section, ' : ', category, ' - ', componentName);
@@ -106,31 +150,30 @@ const App = () => {
                                         console.error('Error loading component:', error);
                                     });
                             }
-                            return Promise.resolve();
-                        });
-
-                        // 等待所有组件加载完成
-                        Promise.all(componentPromises).then(() => {
-                            // 设置页面内容
-                            setMdcontent(content);
-                        });
+                        return null;
                     })
-                    .catch((error) => {
-                        console.error('Error loading markdown file:', error);
-                    });
+                );
+
+                // 设置页面内容
+                setContent(
+                    <Template variables={variables}>
+                        {parsedSections.map((section, index) => (
+                            <React.Fragment key={index}>
+                                {section.content}
+                            </React.Fragment>
+                        ))}
+                    </Template>
+                );
             })
             .catch((error) => {
-                console.error('Error loading template defaults:', error);
+                console.error('Error loading markdown file:', error);
+                setContent(<div>Error loading markdown file</div>);
             });
-    }, [dispatch]);
+    }, []);
 
     return (
         <div>
-            {mdcontent.length > 0 ? (
-                <div>{mdcontent}</div>
-            ) : (
-                <p>Loading...</p>
-            )}
+            {content ? content : <p>Loading...</p>}
         </div>
     );
 };
