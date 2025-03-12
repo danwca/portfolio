@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[2214],{2214:(e,t,r)=>{r.r(t),r.d(t,{default:()=>a});const a={certificateCard:"certifications_certificateCard__OXwHy"}}}]);
+//# sourceMappingURL=2214.973d9a79.chunk.js.map

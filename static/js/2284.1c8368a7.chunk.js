@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[2284],{2284:(t,o,n)=>{n.r(o),n.d(o,{default:()=>c});const c={contactFormCard:"contactForm_contactFormCard__OWxYQ",contactForm:"contactForm_contactForm__N2YuO",Inputs:"contactForm_Inputs__Q7zyT",sendBtn:"contactForm_sendBtn__eAZPB",invalidInput:"contactForm_invalidInput__DN5ex",sent:"contactForm_sent__HjgTl"}}}]);
+//# sourceMappingURL=2284.1c8368a7.chunk.js.map

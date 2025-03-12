@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[3554],{3554:(e,o,p)=>{e.exports=p.p+"static/media/project-cover10.aee0f771fbfc1e7b8fa8.png"}}]);

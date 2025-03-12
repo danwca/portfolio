@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[7668],{7668:(e,p,a)=>{e.exports=a.p+"static/media/a_beautiful_day.fc92d28db9f740c923f8.mp3"}}]);

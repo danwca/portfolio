@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[4854],{4854:(e,o,_)=>{_.r(o),_.d(o,{default:()=>n});const n={homeContent:"home_homeContent__ZQFnH","personal-info":"home_personal-info__Nzq6v",name:"home_name__kuuK+",links:"home_links__fWRat",autoText:"home_autoText__7Z-xj",avatarImage:"home_avatarImage__-7Llp",connectText:"home_connectText__AH5PK"}}}]);
+//# sourceMappingURL=4854.ac0a60df.chunk.js.map

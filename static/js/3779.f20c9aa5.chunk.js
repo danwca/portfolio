@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[3779],{3779:(i,t,n)=>{n.r(t),n.d(t,{default:()=>a});const a={githubLink:"https://github.com/killer-abhi",instaLink:"https://instagram.com/killer._abhi",linkedInLink:"https://www.linkedin.com/in/abhishek-kumar-1a295217b/",twitterLink:"https://twitter.com/ABHIDK0914",emailLink:"mailto:dk9554654249@gmail.com"}}}]);
+//# sourceMappingURL=3779.f20c9aa5.chunk.js.map

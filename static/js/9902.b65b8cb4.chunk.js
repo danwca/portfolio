@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[9902],{9902:(e,r,d)=>{d.r(r),d.d(r,{default:()=>_});const _={centered:"degree_centered__JS4yY",degreeMain:"degree_degreeMain__mpW9H",degreeCard:"degree_degreeCard__azdYF",degreeImage:"degree_degreeImage__yJb4D",degreeWrapper:"degree_degreeWrapper__EQG79",degreeInfo:"degree_degreeInfo__5QGl0",details:"degree_details__iX9fX"}}}]);
+//# sourceMappingURL=9902.b65b8cb4.chunk.js.map

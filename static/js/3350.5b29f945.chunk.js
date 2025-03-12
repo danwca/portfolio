@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[3350],{3350:(t,e,o)=>{o.r(e),o.d(e,{default:()=>a});const a={contactMe:"aboutMe_contactMe__Z43Dr",avatar:"aboutMe_avatar__0j9DB",contactCard:"aboutMe_contactCard__ODvH6",contactLinks:"aboutMe_contactLinks__fxgBH",links:"aboutMe_links__zZVC0",resumeBtn:"aboutMe_resumeBtn__xT8ok",renderFromLeft:"aboutMe_renderFromLeft__JnCef",renderFromRight:"aboutMe_renderFromRight__whEWZ"}}}]);
+//# sourceMappingURL=3350.5b29f945.chunk.js.map

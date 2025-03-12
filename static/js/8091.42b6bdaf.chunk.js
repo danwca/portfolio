@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[8091],{8091:(o,e,p)=>{o.exports=p.p+"static/media/universityLogo.f37fb825fa8f18a1bf96.png"}}]);
