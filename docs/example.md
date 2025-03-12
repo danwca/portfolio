@@ -1,9 +1,5 @@
----
-template: default
-title: My Projects
-author: John Doe
-date: 2023-10-01
----
+<!-- page: {"title": "My Page", "template": "custom", "author": "John Doe"} -->
+
 
 <!-- component:Navbar.Navbar -->
 This is the navbar content.
