@@ -33,7 +33,35 @@ resumeLink: "https://drive.google.com/file/d/1vfnzDcN4uATaNZ7cc9kdKvep9ZBUN_be/v
 imageUrl: ""
 <!-- /component -->
 
+## Certifications
 
+<!-- component: Certifications -->
+- **Title**: Web Development BootCamp
+- **Instructor**: Angela Yu
+- **Link**: https://drive.google.com/file/d/1w4FPyEozyFhUO8CQgSoaG8-IlKqpzea8/view?usp=sharing
+- **Platform**: udemy
+<!-- /component -->
+
+<!-- component: Certifications -->
+- **Title**: React Js
+- **Instructor**: Maximilian Schwarzmuller
+- **Link**: #
+- **Platform**: udemy
+<!-- /component -->
+
+<!-- component: Certifications -->
+- **Title**: Node Js
+- **Instructor**: Maximilian Schwarzmuller
+- **Link**: #
+- **Platform**: udemy
+<!-- /component -->
+
+<!-- component: Certifications -->
+- **Title**: Flutter Development
+- **Instructor**: Maximilian Schwarzmuller
+- **Link**: https://drive.google.com/file/d/1iGTIn8QLcY1JCqWE-CCIWE5QP5c2cHZp/view?usp=sharing
+- **Platform**: udemy
+<!-- /component -->
 
 ## Credits
 1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio)
