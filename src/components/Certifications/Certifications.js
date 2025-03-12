@@ -14,11 +14,15 @@ const Certifications = ({ content }) => {
         let currentCert = null;
 
         lines.forEach((line) => {
-            if (line.startsWith("- **Title**:")) {
-                if (currentCert) {
-                    certifications.push(currentCert);
-                }
-                currentCert = { title: line.replace("- **Title**:", "").trim() };
+			if (line.startsWith('## ')) 
+			{
+				if (currentCert) {
+					certifications.push(currentCert);
+				}
+				currentCert = { title: line.replace('## ', '').trim(), instructor: '', link: '' , platform:''};
+			}
+            else if (line.startsWith("- **Title**:")) {
+                currentCert.title = line.replace("- **Title**:", "").trim();
             } else if (line.startsWith("- **Instructor**:")) {
                 currentCert.instructor = line.replace("- **Instructor**:", "").trim();
             } else if (line.startsWith("- **Link**:")) {
