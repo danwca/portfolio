@@ -42,12 +42,14 @@ imageUrl: ""
 - **Platform**: udemy
 <!-- /component -->
 
+
 <!-- component:Certifications.Certifications -->
 - **Title**: React Js
 - **Instructor**: Maximilian Schwarzmuller
 - **Link**: #
 - **Platform**: udemy
 <!-- /component -->
+
 
 <!-- component:Certifications.Certifications -->
 - **Title**: Node Js
@@ -62,6 +64,7 @@ imageUrl: ""
 - **Link**: https://drive.google.com/file/d/1iGTIn8QLcY1JCqWE-CCIWE5QP5c2cHZp/view?usp=sharing
 - **Platform**: udemy
 <!-- /component -->
+
 
 ## Credits
 1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio)
