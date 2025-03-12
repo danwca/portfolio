@@ -35,28 +35,28 @@ imageUrl: ""
 
 ## Certifications
 
-<!-- component: Certifications.Certifications -->
+<!-- component:Certifications.Certifications -->
 - **Title**: Web Development BootCamp
 - **Instructor**: Angela Yu
 - **Link**: https://drive.google.com/file/d/1w4FPyEozyFhUO8CQgSoaG8-IlKqpzea8/view?usp=sharing
 - **Platform**: udemy
 <!-- /component -->
 
-<!-- component: Certifications.Certifications -->
+<!-- component:Certifications.Certifications -->
 - **Title**: React Js
 - **Instructor**: Maximilian Schwarzmuller
 - **Link**: #
 - **Platform**: udemy
 <!-- /component -->
 
-<!-- component: Certifications.Certifications -->
+<!-- component:Certifications.Certifications -->
 - **Title**: Node Js
 - **Instructor**: Maximilian Schwarzmuller
 - **Link**: #
 - **Platform**: udemy
 <!-- /component -->
 
-<!-- component: Certifications.Certifications -->
+<!-- component:Certifications.Certifications -->
 - **Title**: Flutter Development
 - **Instructor**: Maximilian Schwarzmuller
 - **Link**: https://drive.google.com/file/d/1iGTIn8QLcY1JCqWE-CCIWE5QP5c2cHZp/view?usp=sharing
