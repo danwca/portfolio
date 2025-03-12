@@ -26,7 +26,7 @@ const Projects = ({ content }) => {
             }
             currentProject = { title: line.replace('## ', '').trim(), description: '', link: '' };
         } else if (line.startsWith('- **Title**:')) {
-            currentProject.title = line.replace('- **Title**:', '').trim();
+            //currentProject.title = line.replace('- **Title**:', '').trim();
         } else if (line.startsWith('- **Description**:')) {
             currentProject.description = line.replace('- **Description**:', '').trim();
         } else if (line.startsWith('- **Link**:')) {

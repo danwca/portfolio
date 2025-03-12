@@ -21,13 +21,13 @@ const Certifications = ({ content }) => {
 				}
 				currentCert = { title: line.replace('## ', '').trim(), instructor: '', link: '' , platform:''};
 			}
-            else if (line.startsWith("- **Title**:")) {
+            else if (currentCert && line.startsWith("- **Title**:")) {
                 currentCert.title = line.replace("- **Title**:", "").trim();
-            } else if (line.startsWith("- **Instructor**:")) {
+            } else if (currentCert && line.startsWith("- **Instructor**:")) {
                 currentCert.instructor = line.replace("- **Instructor**:", "").trim();
-            } else if (line.startsWith("- **Link**:")) {
+            } else if (currentCert && line.startsWith("- **Link**:")) {
                 currentCert.link = line.replace("- **Link**:", "").trim();
-            } else if (line.startsWith("- **Platform**:")) {
+            } else if (currentCert && line.startsWith("- **Platform**:")) {
                 currentCert.platform = line.replace("- **Platform**:", "").trim();
             }
         });
