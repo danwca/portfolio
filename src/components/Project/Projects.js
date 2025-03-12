@@ -17,9 +17,10 @@ const Projects = ({ content }) => {
     const lines = content.split('\n');
     let currentProject = null;
     const projects = [];
-
+    console.log(content);
     lines.forEach((line) => {
-        if (line.startsWith('## ')) {
+        if (line.startsWith('## ')) 
+		{
             if (currentProject) {
                 projects.push(currentProject);
             }
@@ -33,6 +34,11 @@ const Projects = ({ content }) => {
         }
     });
 	
+    // 循环结束后，检查是否还有未添加的项目
+    if (currentProject) {
+        projects.push(currentProject);
+    }	
+	console.log(projects);
     return (
         <div id="projects">
             <div className={styles.projects}>

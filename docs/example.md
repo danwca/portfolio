@@ -32,3 +32,14 @@ aboutMe: "Hi Everyone, I am Daniel Wang from Toronto,  Worked with libraries & f
 resumeLink: "https://drive.google.com/file/d/1vfnzDcN4uATaNZ7cc9kdKvep9ZBUN_be/view?usp=sharing",
 imageUrl: ""
 <!-- /component -->
+
+
+
+## Credits
+1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio)
+
+
+## ways to help the project:
+1. ⭐️ the repository. 
+2. leave your comments
+3. donate to the project

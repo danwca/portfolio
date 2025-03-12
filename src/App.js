@@ -1,7 +1,10 @@
+import './app.css';
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import config from './config.json';
+import { useSelector } from "react-redux";
 
 // 动态加载模板
 const loadTemplate = async (templateName) => {
@@ -94,6 +97,7 @@ const parseMarkdown = (markdown) => {
 const App = () => {
     const [content, setContent] = useState(null);
     const { docsPath } = config;
+    const theme = useSelector(state => state.theme);
 
     useEffect(() => {
         // 加载 markdown 文件
@@ -115,7 +119,7 @@ const App = () => {
                 }
 
                 // 加载模板的静态资源
-                loadTemplateAssets(templateName);
+                //loadTemplateAssets(templateName);
 
                 // 解析各个部分
                 const parsedSections = await Promise.all(
@@ -170,7 +174,7 @@ const App = () => {
     }, []);
 
     return (
-        <div>
+		<div className="App" style={theme}>
             {content ? content : <p>Loading...</p>}
         </div>
     );
