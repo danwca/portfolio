@@ -19,18 +19,20 @@ const Projects = ({ content }) => {
     const projects = [];
     console.log(content);
     lines.forEach((line) => {
-        if (line.startsWith('## ')) 
+        if (line.startsWith('### ')) 
 		{
             if (currentProject) {
                 projects.push(currentProject);
             }
-            currentProject = { title: line.replace('## ', '').trim(), description: '', link: '' };
-        } else if (line.startsWith('- **Title**:')) {
+            currentProject = { title: line.replace('### ', '').trim(), description: '', link: '', updated :'' };
+        } else if (currentProject && line.startsWith('- **Title**:')) {
             //currentProject.title = line.replace('- **Title**:', '').trim();
-        } else if (line.startsWith('- **Description**:')) {
-            currentProject.description = line.replace('- **Description**:', '').trim();
-        } else if (line.startsWith('- **Link**:')) {
-            currentProject.link = line.replace('- **Link**:', '').trim();
+        } else if (currentProject && line.startsWith('- **Description:**')) {
+            currentProject.description = line.replace('- **Description:**', '').trim();
+        } else if (currentProject &&  line.startsWith('- **Link:**')) {
+            currentProject.link = line.replace('- **Link:**', '').trim();
+        } else if (currentProject &&  line.startsWith('- **Updated:**')) {
+            currentProject.updated = line.replace('- **Updated:**', '').trim();
         }
     });
 	
