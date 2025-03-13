@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import ReactMarkdown from "react-markdown";
+import './app.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import config from './config.json';
 import { useSelector } from "react-redux";
-import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
-import config from "./config.json";
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -12,53 +12,26 @@ const loadTemplate = async (templateName) => {
         return templateModule.default;
     } catch (error) {
         console.warn(`No custom driver for template ${templateName}, using global default.`);
-        const globalDefault = await import("./templates/default.js");
+        const globalDefault = await import('./templates/default.js');
         return globalDefault.default;
     }
 };
 
-// Parse markdown content
-const parseMarkdown = (markdown) => {
-    const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
-    const pageParamsMatch = markdown.match(pageParamsRegex);
-    let pageParams = {};
+// Load template assets (CSS and JS)
+const loadTemplateAssets = (templateName) => {
+    const cssPath = `${process.env.PUBLIC_URL}/${templateName}/styles.css`;
+    const jsPath = `${process.env.PUBLIC_URL}/${templateName}/script.js`;
 
-    if (pageParamsMatch) {
-        try {
-            pageParams = JSON.parse(pageParamsMatch[1].trim());
-        } catch (error) {
-            console.error("Error parsing page parameters:", error);
-        }
-    }
+    // Load CSS
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = cssPath;
+    document.head.appendChild(link);
 
-    const body = markdown.replace(pageParamsRegex, "").trim();
-    const sections = [];
-    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
-
-    let lastIndex = 0;
-    let match;
-    while ((match = componentRegex.exec(body)) !== null) {
-        if (match.index > lastIndex) {
-            sections.push({
-                type: "markdown",
-                content: body.slice(lastIndex, match.index),
-            });
-        }
-        sections.push({
-            type: "component",
-            name: match[1],
-            content: match[2].trim(),
-        });
-        lastIndex = match.index + match[0].length;
-    }
-    if (lastIndex < body.length) {
-        sections.push({
-            type: "markdown",
-            content: body.slice(lastIndex),
-        });
-    }
-
-    return { pageParams, sections };
+    // Load JS
+    const script = document.createElement('script');
+    script.src = jsPath;
+    document.body.appendChild(script);
 };
 
 // Dynamic component loading
@@ -72,129 +45,177 @@ const loadComponent = async (componentPath) => {
     }
 };
 
+// Parse markdown file
+const parseMarkdown = (markdown) => {
+    // Extract <!-- page: ... --> parameters
+    const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
+    const pageParamsMatch = markdown.match(pageParamsRegex);
+    let pageParams = {};
 
-// Main App component
+    if (pageParamsMatch) {
+        try {
+            pageParams = JSON.parse(pageParamsMatch[1].trim());
+        } catch (error) {
+            console.error('Error parsing page parameters:', error);
+        }
+    }
+
+    // Extract sections (markdown or component blocks)
+    const body = markdown.replace(pageParamsRegex, '').trim();
+    const sections = [];
+    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
+
+    let lastIndex = 0;
+    let match;
+    while ((match = componentRegex.exec(body)) !== null) {
+        if (match.index > lastIndex) {
+            sections.push({
+                type: 'markdown',
+                content: body.slice(lastIndex, match.index),
+            });
+        }
+        sections.push({
+            type: 'component',
+            name: match[1],
+            content: match[2].trim(),
+        });
+        lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < body.length) {
+        sections.push({
+            type: 'markdown',
+            content: body.slice(lastIndex),
+        });
+    }
+
+    return { pageParams, sections };
+};
+
+// Construct GitHub raw URL for markdown files
+const getMarkdownUrl = (path) => {
+    const { githubaccount, repository } = config;
+    return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${path}`;
+};
+
+// Fetch the list of markdown files in the docs folder
+const fetchDocsFileList = async () => {
+    const { githubaccount, repository } = config;
+    const url = `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs`;
+    try {
+        const response = await axios.get(url);
+        return response.data
+            .filter(file => file.name.endsWith('.md')) // Filter only markdown files
+            .map(file => file.path.replace('docs/', '')); // Remove 'docs/' prefix
+    } catch (error) {
+        console.error('Error fetching docs file list:', error);
+        return [];
+    }
+};
+
 const App = () => {
     const [content, setContent] = useState(null);
-    const [markdownFiles, setMarkdownFiles] = useState([]);
-    const { docsPath } = config;
-    const theme = useSelector((state) => state.theme);
-
-    // Fetch the list of markdown files from the repository
+    const [fileList, setFileList] = useState([]);
+    const theme = useSelector(state => state.theme);
     useEffect(() => {
-        axios.get(`${docsPath}/`) // Fetch the directory listing (requires GitHub API or a custom endpoint)
-            .then((response) => {
-                const files = response.data
-                    .filter((file) => file.name.endsWith(".md")) // Filter markdown files
-                    .map((file) => file.name);
-                setMarkdownFiles(files);
-            })
-            .catch((error) => {
-                console.error("Error fetching markdown files:", error);
-            });
-    }, [docsPath]);
-
-    // Fetch and process a specific markdown file
-    const fetchMarkdownFile = async (filename) => {
-        try {
-            const response = await axios.get(`${docsPath}/${filename}`);
-            if (!response.data) {
-                throw new Error("Markdown file is empty or invalid");
+        // Fetch the list of markdown files in the docs folder
+        fetchDocsFileList().then(files => {
+			console.log(files);
+            setFileList(files);
+            if (files.length > 0) {
+                // Load the first markdown file by default
+                loadMarkdownFile(files[0]);
             }
+        });
+    }, []);
 
-            const markdownContent = response.data;
-            const { pageParams, sections } = parseMarkdown(markdownContent);
+    const loadMarkdownFile = async (path) => {
+        const markdownUrl = getMarkdownUrl(path);
 
-            const templateName = pageParams.template || config.defaultTemplate;
-            const Template = await loadTemplate(templateName);
-            if (!Template) {
-                throw new Error("Template not found");
-            }
+        // Fetch and process the markdown file
+        axios.get(markdownUrl)
+            .then(async (response) => {
+                if (!response.data) {
+                    throw new Error('Markdown file is empty or invalid');
+                }
+                const markdownContent = response.data;
 
-            const parsedSections = await Promise.all(
-                sections.map(async (section) => {
-                    if (!section) return null;
+                // Parse markdown
+                const { pageParams, sections } = parseMarkdown(markdownContent);
 
-                    if (section.type === "markdown") {
-                        return {
-                            type: "markdown",
-                            content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                        };
-                    } else if (section.type === "component") {
-                        let [category, componentName] = section.name.split(".");
-                        if (componentName === undefined) {
-                            componentName = category;
-                        }
-                        const Component = await loadComponent(`${category}/${componentName}`);
-                        if (!Component) {
+                // Load template
+                const templateName = pageParams.template || config.defaultTemplate;
+                const Template = await loadTemplate(templateName);
+                if (!Template) {
+                    throw new Error('Template not found');
+                }
+
+                // Parse sections
+                const parsedSections = await Promise.all(
+                    sections.map(async (section) => {
+                        if (!section) return null;
+
+                        if (section.type === 'markdown') {
                             return {
-                                type: "error",
-                                content: `Component ${section.name} not found`,
+                                type: 'markdown',
+                                content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                            };
+                        } else if (section.type === 'component') {
+                            // Load component
+                            let [category, componentName] = section.name.split('.');
+                            if (componentName === undefined) {
+                                componentName = category;
+                            }
+                            const Component = await loadComponent(`${category}/${componentName}`);
+                            if (!Component) {
+                                return {
+                                    type: 'error',
+                                    content: `Component ${section.name} not found`,
+                                };
+                            }
+                            return {
+                                type: 'component',
+                                content: <Component content={section.content} />,
                             };
                         }
-                        return {
-                            type: "component",
-                            content: <Component content={section.content} />,
-                        };
-                    }
-                    return null;
-                })
-            );
+                        return null;
+                    })
+                );
 
-            const filteredSections = parsedSections.filter((section) => section !== null);
+                // Filter out null values
+                const filteredSections = parsedSections.filter(section => section !== null);
 
-            setContent(
-                <Template variables={pageParams}>
-                    {filteredSections.map((section, index) => (
-                        <React.Fragment key={index}>{section.content}</React.Fragment>
-                    ))}
-                </Template>
-            );
-        } catch (error) {
-            console.error("Error loading markdown file:", error);
-            setContent(<div>Error loading markdown file: {error.message}</div>);
-        }
+                // Set content
+                setContent(
+                    <Template variables={pageParams}>
+                        {filteredSections.map((section, index) => (
+                            <React.Fragment key={index}>
+                                {section.content}
+                            </React.Fragment>
+                        ))}
+                    </Template>
+                );
+            })
+            .catch((error) => {
+                console.error('Error loading markdown file:', error);
+                setContent(<div>Error loading markdown file: {error.message}</div>);
+            });
     };
 
     return (
-        <Router>
-            <div className="App" style={theme}>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <div>
-                                <h1>Available Markdown Files</h1>
-                                <ul>
-                                    {markdownFiles.map((file, index) => (
-                                        <li key={index}>
-                                            <a href={`/${file.replace(".md", "")}`}>{file}</a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        }
-                    />
-                    <Route
-                        path="/:filename"
-                        element={<MarkdownPage fetchMarkdownFile={fetchMarkdownFile} />}
-                    />
-                </Routes>
+        <div className="App" style={theme}>
+            {/* File list navigation */}
+            <div className="file-list">
+                {fileList.map(file => (
+                    <button key={file} onClick={() => loadMarkdownFile(file)}>
+                        {file}
+                    </button>
+                ))}
             </div>
-        </Router>
+
+            {/* Markdown content */}
+            {content ? content : <p>Loading...</p>}
+        </div>
     );
-};
-
-// Component to handle individual markdown files
-const MarkdownPage = ({ fetchMarkdownFile }) => {
-    const { filename } = useParams();
-    const [content, setContent] = useState(null);
-
-    useEffect(() => {
-        fetchMarkdownFile(`${filename}.md`).then(() => setContent(content));
-    }, [filename, fetchMarkdownFile]);
-
-    return content ? content : <p>Loading...</p>;
 };
 
 export default App;
