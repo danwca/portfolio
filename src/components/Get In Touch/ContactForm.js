@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Prompt } from "react-router-dom";
+import { useBlocker } from "react-router-dom"; // Replace Prompt with useBlocker
 
 import classes from "./contactForm.module.css";
 import Button from "../UI/Button";
@@ -7,7 +7,6 @@ import useInput from "../../hooks/useInput";
 import { useSelector } from "react-redux";
 
 const ContactForm = ({ content }) => {
-
     const [isEntering, setIsEntering] = useState(false);
 
     const { value: enteredName,
@@ -54,41 +53,48 @@ const ContactForm = ({ content }) => {
 
     const formSubmitHandler = (event) => {
         event.preventDefault();
-        // resetNameHandler();
-        // resetEmailHandler();
-        // resetPhoneHandler();
-        // resetMessageHandler();
-        // setEnteredLName('');
         if (!enteredNameIsValid || !enteredEmailIsValid || !enteredMessageIsValid || !enteredPhoneIsValid) {
             return;
         }
-        const message={
-            time:new Date().toUTCString(),
-            name:enteredName+" "+enteredLName,
-            email:enteredEmail,
-            phone:enteredPhone,
-            message:enteredMessage,
+        const message = {
+            time: new Date().toUTCString(),
+            name: enteredName + " " + enteredLName,
+            email: enteredEmail,
+            phone: enteredPhone,
+            message: enteredMessage,
         }
         finishEnteringHandler();
         sendMessageHanlder(message);
     }
-    
-    const sendMessageHanlder=async(message)=>{
-        setBtnText((prevValue)=>'Sending ...');
-        await fetch('https://react-redux-47ef8-default-rtdb.firebaseio.com/portfolio-messages.json',{
-            method:'POST',
-            body:JSON.stringify(message)
+
+    const sendMessageHanlder = async (message) => {
+        setBtnText((prevValue) => 'Sending ...');
+        await fetch('https://react-redux-47ef8-default-rtdb.firebaseio.com/portfolio-messages.json', {
+            method: 'POST',
+            body: JSON.stringify(message)
         });
         setIsSent(true);
         setBtnText((prevValue) => 'Message Sent');
     }
 
-    const finishEnteringHandler=()=>{
+    const finishEnteringHandler = () => {
         setIsEntering(false);
-      }
-      const formFocussedHandler = () => {
+    }
+
+    const formFocussedHandler = () => {
         setIsEntering(true);
-      };
+    };
+
+    // Use the useBlocker hook
+    useBlocker(() => {
+        if (isEntering) {
+            return !window.confirm(
+                'Are You Sure You Want To Leave? All your entered data will be lost!'
+            );
+        }
+        return false;
+    }, isEntering);
+
     const nameInputClasses = nameInputHasError ? `${classes.Inputs} ${classes.invalidInput}` : classes.Inputs;
     const emailInputClasses = emailInputHasError ? `${classes.Inputs} ${classes.invalidInput}` : classes.Inputs;
     const phoneInputClasses = phoneInputHasError ? `${classes.Inputs} ${classes.invalidInput}` : classes.Inputs;
@@ -98,9 +104,6 @@ const ContactForm = ({ content }) => {
     const nonThemeColor = useSelector(state => state.nonThemeColor);
     return (
         <Fragment>
-            <Prompt when={isEntering} message={(location) =>
-                'Are You Sure You Want To Leave ? All your entered data will be lost!'}
-            />
             <div className={classes.contactFormCard}>
                 <h1 style={{ color: nonThemeColor }}>Leave A Message</h1>
                 <form onFocus={formFocussedHandler} action="" onSubmit={formSubmitHandler} className={formClasses}>

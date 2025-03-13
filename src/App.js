@@ -1,41 +1,67 @@
-import './app.css';
-
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
-import config from './config.json';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import ReactMarkdown from "react-markdown";
 import { useSelector } from "react-redux";
+import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
+import config from "./config.json";
 
-// 动态加载模板
+// Dynamic template loading
 const loadTemplate = async (templateName) => {
     try {
         const templateModule = await import(`./templates/${templateName}.js`);
         return templateModule.default;
     } catch (error) {
         console.warn(`No custom driver for template ${templateName}, using global default.`);
-        const globalDefault = await import('./templates/default.js');
+        const globalDefault = await import("./templates/default.js");
         return globalDefault.default;
     }
 };
 
-// 加载模板的静态资源
-const loadTemplateAssets = (templateName) => {
-    const cssPath = `${process.env.PUBLIC_URL}/${templateName}/styles.css`;
-    const jsPath = `${process.env.PUBLIC_URL}/${templateName}/script.js`;
+// Parse markdown content
+const parseMarkdown = (markdown) => {
+    const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
+    const pageParamsMatch = markdown.match(pageParamsRegex);
+    let pageParams = {};
 
-    // 动态加载 CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = cssPath;
-    document.head.appendChild(link);
+    if (pageParamsMatch) {
+        try {
+            pageParams = JSON.parse(pageParamsMatch[1].trim());
+        } catch (error) {
+            console.error("Error parsing page parameters:", error);
+        }
+    }
 
-    // 动态加载 JS
-    const script = document.createElement('script');
-    script.src = jsPath;
-    document.body.appendChild(script);
+    const body = markdown.replace(pageParamsRegex, "").trim();
+    const sections = [];
+    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
+
+    let lastIndex = 0;
+    let match;
+    while ((match = componentRegex.exec(body)) !== null) {
+        if (match.index > lastIndex) {
+            sections.push({
+                type: "markdown",
+                content: body.slice(lastIndex, match.index),
+            });
+        }
+        sections.push({
+            type: "component",
+            name: match[1],
+            content: match[2].trim(),
+        });
+        lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < body.length) {
+        sections.push({
+            type: "markdown",
+            content: body.slice(lastIndex),
+        });
+    }
+
+    return { pageParams, sections };
 };
 
-// 动态加载组件
+// Dynamic component loading
 const loadComponent = async (componentPath) => {
     try {
         const module = await import(`./components/${componentPath}`);
@@ -46,138 +72,129 @@ const loadComponent = async (componentPath) => {
     }
 };
 
-// 解析 markdown 文件
-const parseMarkdown = (markdown) => {
-    // 提取 <!-- page: ... --> 中的参数
-    const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
-    const pageParamsMatch = markdown.match(pageParamsRegex);
-    let pageParams = {};
 
-    if (pageParamsMatch) {
-        try {
-            // 将注释块中的内容解析为 JSON 对象
-            pageParams = JSON.parse(pageParamsMatch[1].trim());
-        } catch (error) {
-            console.error('Error parsing page parameters:', error);
-        }
-    }
-
-    // 提取组件和 markdown 内容
-    const body = markdown.replace(pageParamsRegex, '').trim();
-    const sections = [];
-    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
-
-    // 分解 markdown 内容
-    let lastIndex = 0;
-    let match;
-    while ((match = componentRegex.exec(body)) !== null) {
-        if (match.index > lastIndex) {
-            sections.push({
-                type: 'markdown',
-                content: body.slice(lastIndex, match.index),
-            });
-        }
-        sections.push({
-            type: 'component',
-            name: match[1],
-            content: match[2].trim(),
-        });
-        lastIndex = match.index + match[0].length;
-    }
-    if (lastIndex < body.length) {
-        sections.push({
-            type: 'markdown',
-            content: body.slice(lastIndex),
-        });
-    }
-
-    return { pageParams, sections };
-};
-
+// Main App component
 const App = () => {
     const [content, setContent] = useState(null);
+    const [markdownFiles, setMarkdownFiles] = useState([]);
     const { docsPath } = config;
-    const theme = useSelector(state => state.theme);
+    const theme = useSelector((state) => state.theme);
 
+    // Fetch the list of markdown files from the repository
     useEffect(() => {
-        // 加载 markdown 文件
-        axios.get(`${docsPath}/example.md`)
-            .then(async (response) => {
-                if (!response.data) {
-                    throw new Error('Markdown file is empty or invalid');
-                }
-                const markdownContent = response.data;
-
-                // 解析 markdown 文件
-                const { pageParams, sections } = parseMarkdown(markdownContent);
-
-                // 动态加载模板
-                const templateName = pageParams.template || config.defaultTemplate;
-                const Template = await loadTemplate(templateName);
-                if (!Template) {
-                    throw new Error('Template not found');
-                }
-
-                // 加载模板的静态资源
-                //loadTemplateAssets(templateName);
-
-                // 解析各个部分
-                const parsedSections = await Promise.all(
-                    sections.map(async (section) => {
-                        if (!section) return null;
-
-                        if (section.type === 'markdown') {
-                            return {
-                                type: 'markdown',
-                                content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                            };
-                        } else if (section.type === 'component') {
-                            // 动态加载组件
-                            let [category, componentName] = section.name.split('.');
-                            if (componentName === undefined) {
-                                componentName = category;
-                            }
-                            const Component = await loadComponent(`${category}/${componentName}`);
-                            if (!Component) {
-                                return {
-                                    type: 'error',
-                                    content: `Component ${section.name} not found`,
-                                };
-                            }
-                            return {
-                                type: 'component',
-                                content: <Component content={section.content} />,
-                            };
-                        }
-                        return null;
-                    })
-                );
-
-                // 过滤掉 null 值
-                const filteredSections = parsedSections.filter(section => section !== null);
-
-                // 设置页面内容
-                setContent(
-                    <Template variables={pageParams}>
-                        {filteredSections.map((section, index) => (
-                            <React.Fragment key={index}>
-                                {section.content}
-                            </React.Fragment>
-                        ))}
-                    </Template>
-                );
+        axios.get(`${docsPath}/`) // Fetch the directory listing (requires GitHub API or a custom endpoint)
+            .then((response) => {
+                const files = response.data
+                    .filter((file) => file.name.endsWith(".md")) // Filter markdown files
+                    .map((file) => file.name);
+                setMarkdownFiles(files);
             })
             .catch((error) => {
-                console.error('Error loading markdown file:', error);
-                setContent(<div>Error loading markdown file: {error.message}</div>);
+                console.error("Error fetching markdown files:", error);
             });
-    }, []);
+    }, [docsPath]);
+
+    // Fetch and process a specific markdown file
+    const fetchMarkdownFile = async (filename) => {
+        try {
+            const response = await axios.get(`${docsPath}/${filename}`);
+            if (!response.data) {
+                throw new Error("Markdown file is empty or invalid");
+            }
+
+            const markdownContent = response.data;
+            const { pageParams, sections } = parseMarkdown(markdownContent);
+
+            const templateName = pageParams.template || config.defaultTemplate;
+            const Template = await loadTemplate(templateName);
+            if (!Template) {
+                throw new Error("Template not found");
+            }
+
+            const parsedSections = await Promise.all(
+                sections.map(async (section) => {
+                    if (!section) return null;
+
+                    if (section.type === "markdown") {
+                        return {
+                            type: "markdown",
+                            content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                        };
+                    } else if (section.type === "component") {
+                        let [category, componentName] = section.name.split(".");
+                        if (componentName === undefined) {
+                            componentName = category;
+                        }
+                        const Component = await loadComponent(`${category}/${componentName}`);
+                        if (!Component) {
+                            return {
+                                type: "error",
+                                content: `Component ${section.name} not found`,
+                            };
+                        }
+                        return {
+                            type: "component",
+                            content: <Component content={section.content} />,
+                        };
+                    }
+                    return null;
+                })
+            );
+
+            const filteredSections = parsedSections.filter((section) => section !== null);
+
+            setContent(
+                <Template variables={pageParams}>
+                    {filteredSections.map((section, index) => (
+                        <React.Fragment key={index}>{section.content}</React.Fragment>
+                    ))}
+                </Template>
+            );
+        } catch (error) {
+            console.error("Error loading markdown file:", error);
+            setContent(<div>Error loading markdown file: {error.message}</div>);
+        }
+    };
 
     return (
-		<div className="App" style={theme}>
-            {content ? content : <p>Loading...</p>}
-        </div>
+        <Router>
+            <div className="App" style={theme}>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <div>
+                                <h1>Available Markdown Files</h1>
+                                <ul>
+                                    {markdownFiles.map((file, index) => (
+                                        <li key={index}>
+                                            <a href={`/${file.replace(".md", "")}`}>{file}</a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        }
+                    />
+                    <Route
+                        path="/:filename"
+                        element={<MarkdownPage fetchMarkdownFile={fetchMarkdownFile} />}
+                    />
+                </Routes>
+            </div>
+        </Router>
     );
+};
+
+// Component to handle individual markdown files
+const MarkdownPage = ({ fetchMarkdownFile }) => {
+    const { filename } = useParams();
+    const [content, setContent] = useState(null);
+
+    useEffect(() => {
+        fetchMarkdownFile(`${filename}.md`).then(() => setContent(content));
+    }, [filename, fetchMarkdownFile]);
+
+    return content ? content : <p>Loading...</p>;
 };
 
 export default App;
