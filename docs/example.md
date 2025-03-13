@@ -1,7 +1,10 @@
 <!-- page: {"title": "My Page", "template": "custom", "author": "John Doe"} -->
 
 
-
+<!-- component:Navbar.Navbar -->
+firstName: Abhishek
+lastName: Kumar
+<!-- /component -->
 
 # My Projects
 

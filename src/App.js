@@ -97,39 +97,14 @@ const getMarkdownUrl = (path) => {
     return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${path}`;
 };
 
-// Fetch the list of markdown files in the docs folder
-const fetchDocsFileList = async () => {
-    const { githubaccount, repository } = config;
-    const url = `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs`;
-    try {
-        const response = await axios.get(url);
-        return response.data
-            .filter(file => file.name.endsWith('.md')) // Filter only markdown files
-            .map(file => file.path.replace('docs/', '')); // Remove 'docs/' prefix
-    } catch (error) {
-        console.error('Error fetching docs file list:', error);
-        return [];
-    }
-};
-
 const App = () => {
     const [content, setContent] = useState(null);
-    const [fileList, setFileList] = useState([]);
     const theme = useSelector(state => state.theme);
-    useEffect(() => {
-        // Fetch the list of markdown files in the docs folder
-        fetchDocsFileList().then(files => {
-			console.log(files);
-            setFileList(files);
-            if (files.length > 0) {
-                // Load the first markdown file by default
-                loadMarkdownFile(files[0]);
-            }
-        });
-    }, []);
 
-    const loadMarkdownFile = async (path) => {
-        const markdownUrl = getMarkdownUrl(path);
+    useEffect(() => {
+        // Extract the markdown file path from the URL
+        const path = window.location.pathname.replace(/^\//, ''); // Remove leading slash
+        const markdownUrl = getMarkdownUrl(path || 'example.md'); // Default to 'example.md' if no path
 
         // Fetch and process the markdown file
         axios.get(markdownUrl)
@@ -199,20 +174,10 @@ const App = () => {
                 console.error('Error loading markdown file:', error);
                 setContent(<div>Error loading markdown file: {error.message}</div>);
             });
-    };
+    }, []);
 
     return (
         <div className="App" style={theme}>
-            {/* File list navigation */}
-            <div className="file-list">
-                {fileList.map(file => (
-                    <button key={file} onClick={() => loadMarkdownFile(file)}>
-                        {file}
-                    </button>
-                ))}
-            </div>
-
-            {/* Markdown content */}
             {content ? content : <p>Loading...</p>}
         </div>
     );
