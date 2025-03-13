@@ -2,7 +2,8 @@
 
 
 <!-- component:Navbar.Navbar -->
-This is the navbar content.
+firstName: "Abhishek",
+lastName: "Kumar",
 <!-- /component -->
 
 # My Projects

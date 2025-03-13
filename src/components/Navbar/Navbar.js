@@ -14,6 +14,14 @@ import PersonalData from "../Data/PersonalData";
 
 const Navbar = ({ content }) => {
 
+    const data = {};
+    content.split('\n').forEach((line) => {
+        const [key, value] = line.split(':').map((part) => part.trim());
+        if (key && value) {
+            data[key] = value.replace(/^"|"$/g, ''); // 去除引号
+        }
+    });
+
     const menuRef = useRef();
     const dispatch = useDispatch();
     
@@ -82,7 +90,7 @@ const Navbar = ({ content }) => {
             <div className="navbar" style={{ backgroundColor: bgColor }}>
                 <div className="logoContainer">
                     <div id="logo">
-                        {PersonalData.firstName}&nbsp;&nbsp;{PersonalData.lastName}
+                        {data.firstName}&nbsp;&nbsp;{data.lastName}
                     </div>
                 </div>
                 <div className="navsContainer" style={{ color: nonThemeColor }}>
