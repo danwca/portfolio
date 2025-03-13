@@ -2,8 +2,8 @@
 
 
 <!-- component:Navbar.Navbar -->
-firstName: "Abhishek",
-lastName: "Kumar",
+firstName: Abhishek
+lastName: Kumar
 <!-- /component -->
 
 # My Projects
