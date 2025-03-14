@@ -72,7 +72,7 @@ This is a paragraph with a [link](https://example.com).
 <!-- /component -->
 
 
-<!-- component:ProfessionalSkillset.programmingSkills -->
+<!-- component:ProfessionalSkillset.ProgrammingSkills -->
 ## Programming Skills
 * JavaScript, ![JavaScript](svg/JavaScript.svg)
 * Node.Js, ![NodeJs](svg/NodeJs.svg)
