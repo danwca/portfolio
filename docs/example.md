@@ -71,6 +71,19 @@ This is a paragraph with a [link](https://example.com).
 
 <!-- /component -->
 
+
+<!-- component: programmingSkills -->
+## Programming Skills
+* JavaScript, ![JavaScript](svg/JavaScript.svg)
+* Node.Js, ![NodeJs](svg/NodeJs.svg)
+* Python, ![Python](svg/Python.svg)
+* MongoDB, ![MongoDB](svg/MongoDB.svg)
+* Firebase, ![FireBase](svg/FireBase.svg)
+* ReactJS, ![ReactJS](svg/ReactJS.svg)
+* C++, ![CPP](svg/CPP.svg)
+* Redux, ![Redux](svg/Redux.svg)
+<!-- /component -->
+
 <!-- component:AboutMe.AboutMe -->
 firstName: "Abhishek",
 lastName: "Kumar",
