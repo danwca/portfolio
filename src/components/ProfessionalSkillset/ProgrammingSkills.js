@@ -1,5 +1,7 @@
 import classes from "./programmingSkills.module.css";
 import { useSelector } from "react-redux";
+import config from '/config.json';
+
 
 const ProgrammingSkills = ({ content }) => {
     const uiColor = useSelector(state => state.uiColor);
@@ -16,13 +18,20 @@ const ProgrammingSkills = ({ content }) => {
             };
         });
 
+		// Construct the absolute URL for the SVG files
+		const { githubaccount, repository } = config; // Assuming config is imported
+		const getAbsoluteSvgPath = (relativePath) => {
+			return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${relativePath}`;
+		};
+
+		
     return (
         <div className={classes.mainCard}>
             <h1 style={{ color: nonThemeColor }}>Programming <span style={{ color: uiColor }}>SkillSet</span></h1>
             <div className={classes.skillSetCard} style={{ color: nonThemeColor }}>
                 {skillItems.map((item, index) => (
                     <div className={classes.skillItem} style={{ borderColor: uiColor }} key={index}>
-                        <img src={item.svgPath} alt={item.skillName} />
+                        <img src={getAbsoluteSvgPath(item.svgPath)} alt={item.skillName} />
                         <span className={classes.skillName}>{item.skillName}</span>
                     </div>
                 ))}
