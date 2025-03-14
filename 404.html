@@ -4,35 +4,37 @@
     <title>My Portfolio</title>
     <script>
         // Extract the path from the URL
-        const path = window.location.pathname.replace(/^\//, ''); // Remove leading slash
+        const fullPath = window.location.pathname; // e.g., "/portfolio/example.md"
+        const repositoryName = "portfolio"; // Replace with your repository name
 
-        // Redirect to the root URL if no path is provided
-        if (!path) {
-            window.location.href = '/';
-        } else {
-            // Fetch the markdown file dynamically
-            fetch(`https://raw.githubusercontent.com/danwca/portfolio/main/docs/${path}`)
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('File not found');
-                    }
-                })
-                .then(markdownContent => {
-                    // Render the markdown content
-                    document.body.innerHTML = `<div id="content"></div>`;
-                    const contentDiv = document.getElementById('content');
-                    contentDiv.innerHTML = markdownContent;
-                })
-                .catch(error => {
-                    // Show a 404 message if the file is not found
-                    document.body.innerHTML = `
-                        <h1>404 - Page Not Found</h1>
-                        <p>The requested page does not exist.</p>
-                    `;
-                });
-        }
+        // Remove the repository name from the path
+        const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryName}`), '');
+
+        // Remove leading slash and default to 'example.md' if no path is provided
+        const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
+
+        // Fetch the markdown file dynamically
+        fetch(`https://raw.githubusercontent.com/danwca/portfolio/main/docs/${path}`)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('File not found');
+                }
+            })
+            .then(markdownContent => {
+                // Render the markdown content
+                document.body.innerHTML = `<div id="content"></div>`;
+                const contentDiv = document.getElementById('content');
+                contentDiv.innerHTML = markdownContent;
+            })
+            .catch(error => {
+                // Show a 404 message if the file is not found
+                document.body.innerHTML = `
+                    <h1>404 - Page Not Found</h1>
+                    <p>The requested page does not exist.</p>
+                `;
+            });
     </script>
 </head>
 <body>
