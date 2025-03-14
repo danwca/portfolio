@@ -84,6 +84,7 @@ This is a paragraph with a [link](https://example.com).
 * Redux, ![Redux](svg/Redux.svg)
 <!-- /component -->
 
+```
 <!-- component:AboutMe.AboutMe -->
 firstName: "Abhishek",
 lastName: "Kumar",
@@ -95,7 +96,7 @@ aboutMe: "Hi Everyone, I am Abhishek Kumar from Uttar Pradesh, India.I learned C
 resumeLink: "https://drive.google.com/file/d/1vfnzDcN4uATaNZ7cc9kdKvep9ZBUN_be/view?usp=sharing",
 imageUrl: ""
 <!-- /component -->
-
+```
 ## Certifications
 
 <!-- component:Certifications.Certifications -->
