@@ -17,7 +17,7 @@ const Projects = ({ content }) => {
     const lines = content.split('\n');
     let currentProject = null;
     const projects = [];
-    console.log(content);
+    //console.log(content);
     lines.forEach((line) => {
         if (line.startsWith('### ')) 
 		{
@@ -40,7 +40,7 @@ const Projects = ({ content }) => {
     if (currentProject) {
         projects.push(currentProject);
     }	
-	console.log(projects);
+	//console.log(projects);
     return (
         <div id="projects">
             <div className={styles.projects}>

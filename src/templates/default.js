@@ -2,7 +2,7 @@ import React from 'react';
 
 const DefaultTemplate = ({ children, variables }) => {
     // 打印传入的参数
-    console.log('Template Variables:', variables);
+    //console.log('Template Variables:', variables);
 
     return (
         <div className="default-template">
