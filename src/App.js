@@ -49,6 +49,7 @@ const loadComponent = async (componentPath) => {
 const parseMarkdown = (markdown) => {
     // Extract <!-- page: ... --> parameters
     const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
+	console.log("check input:", markdown);
     const pageParamsMatch = markdown.match(pageParamsRegex);
     let pageParams = {};
 
@@ -94,26 +95,56 @@ const parseMarkdown = (markdown) => {
 // Construct GitHub raw URL for markdown files
 const getMarkdownUrl = (path) => {
     const { githubaccount, repository } = config;
-    return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${path}`;
-};
 
+    // Get the base URL of the app (e.g., "https://danwca.github.io/portfolio")
+    const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
+
+    // Construct the raw GitHub URL
+    // return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${path}`;
+    return `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs/${path}`;
+
+};
 const App = () => {
     const [content, setContent] = useState(null);
     const theme = useSelector(state => state.theme);
 
     useEffect(() => {
         // Extract the markdown file path from the URL
-        const path = window.location.pathname.replace(/^\//, ''); // Remove leading slash
-        const markdownUrl = getMarkdownUrl(path || 'example.md'); // Default to 'example.md' if no path
+        // const path = window.location.pathname.replace(/^\//, ''); // Remove leading slash
+        //const markdownUrl = getMarkdownUrl(path || 'example.md'); // Default to 'example.md' if no path
+		const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
+		const repositoryPath = config.repository; // e.g., "portfolio"
 
+		// Remove the repository path from the full path
+		const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
+	
+		// Remove leading slash and default to 'example.md' if no path is provided
+		const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
+	
+		// Construct the markdown URL
+		const markdownUrl = getMarkdownUrl(path);
+		
+		
+		
         // Fetch and process the markdown file
         axios.get(markdownUrl)
             .then(async (response) => {
                 if (!response.data) {
                     throw new Error('Markdown file is empty or invalid');
                 }
-                const markdownContent = response.data;
+                //const markdownContent = response.data;
 
+                // Step 2: Fetch the raw content using the download_url
+                const downloadUrl = response.data.download_url;
+                const markdownResponse = await axios.get(downloadUrl);
+
+                if (!markdownResponse.data) {
+                    throw new Error('Markdown file is empty or invalid');
+                }
+
+                const markdownContent = markdownResponse.data;
+				
+				
                 // Parse markdown
                 const { pageParams, sections } = parseMarkdown(markdownContent);
 

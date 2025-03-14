@@ -7,7 +7,7 @@ import ProjectsData from "../Data/ProjectsData";
 import SocialData from "../Data/SocialData";
 import Button from "../UI/Button";
 
-import ProgrammingSkills from "../Professional Skillset/ProgrammingSkills";
+import ProgrammingSkills from "../ProfessionalSkillset/ProgrammingSkills";
 import { useSelector } from "react-redux";
 
 const Projects = ({ content }) => {

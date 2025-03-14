@@ -134,7 +134,7 @@ imageUrl: ""
 
 ## Credits
 1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio)
-
+2. [Muhammad Fiaz/Portfolio](https://github.com/muhammad-fiaz/portfolio)
 
 ## ways to help the project:
 1. ⭐️ the repository. 
