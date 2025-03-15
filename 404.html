@@ -17,6 +17,7 @@
         // Remove leading slash and default to 'example.md' if no path is provided
         const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
 
+		console.log("404 path: ", path);
         // Initialize the app with the path
         initApp(path);
     </script>
