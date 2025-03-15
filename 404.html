@@ -5,10 +5,11 @@
     <script type="module">
         // Import the initApp function from app.js
         import { initApp } from './app.js';
+		import config from './config.json';
 
         // Extract the path from the URL
         const fullPath = window.location.pathname; // e.g., "/portfolio/example.md"
-        const repositoryName = "portfolio"; // Replace with your repository name
+        const repositoryName = config.repository; // Replace with your repository name
 
         // Remove the repository name from the path
         const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryName}`), '');
