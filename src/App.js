@@ -4,6 +4,7 @@ import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import config from './config.json';
 import { useSelector } from "react-redux";
+import ReactDOM from 'react-dom';
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -104,107 +105,126 @@ const getMarkdownUrl = (path) => {
     return `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs/${path}`;
 
 };
+
+
+// Initialize the app with the file path
+export const initApp = (path) => {
+    const { githubaccount, repository } = config;
+
+	const markdownUrl = getMarkdownUrl(path);		
+	
+	// Fetch and process the markdown file
+	axios.get(markdownUrl)
+       .then(async (response) => {
+			if (!response.data) {
+				throw new Error('Markdown file is empty or invalid');
+			}
+			//const markdownContent = response.data;
+	
+			// Step 2: Fetch the raw content using the download_url
+			const downloadUrl = response.data.download_url;
+			const markdownResponse = await axios.get(downloadUrl);
+	
+			if (!markdownResponse.data) {
+				throw new Error('Markdown file is empty or invalid');
+			}
+	
+			const markdownContent = markdownResponse.data;
+	
+	
+			// Parse markdown
+			const { pageParams, sections } = parseMarkdown(markdownContent);
+	
+			// Load template
+			const templateName = pageParams.template || config.defaultTemplate;
+			const Template = await loadTemplate(templateName);
+			if (!Template) {
+				throw new Error('Template not found');
+			}
+	
+			// Parse sections
+			const parsedSections = await Promise.all(
+            sections.map(async (section) => {
+                if (!section) return null;
+
+                if (section.type === 'markdown') {
+                    return {
+                        type: 'markdown',
+                        content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                    };
+                } else if (section.type === 'component') {
+                    // Load component
+                    let [category, componentName] = section.name.split('.');
+                    if (componentName === undefined) {
+                        componentName = category;
+                    }
+                    const Component = await loadComponent(`${category}/${componentName}`);
+                    if (!Component) {
+                        return {
+                            type: 'error',
+                            content: `Component ${section.name} not found`,
+                        };
+                    }
+                    return {
+                        type: 'component',
+                        content: <Component content={section.content} />,
+                    };
+                }
+                return null;
+            })
+        );
+
+        // Filter out null values
+        const filteredSections = parsedSections.filter(section => section !== null);
+
+		// Render the content
+		ReactDOM.render(
+			<Template variables={pageParams}>
+				{filteredSections.map((section, index) => (
+					<React.Fragment key={index}>
+						{section.content}
+					</React.Fragment>
+				))}
+			</Template>,
+			document.getElementById('root')
+			);
+		})
+		.catch((error) => {
+			console.error('Error loading markdown file:', error);
+			ReactDOM.render(
+				<div className="error-page">
+					<h1>404 - Page Not Found</h1>
+					<p>The requested page does not exist.</p>
+				</div>,
+				document.getElementById('root')
+			);
+		});
+};
+
+// Main App component
 const App = () => {
     const [content, setContent] = useState(null);
     const theme = useSelector(state => state.theme);
 
     useEffect(() => {
-        // Extract the markdown file path from the URL
-        // const path = window.location.pathname.replace(/^\//, ''); // Remove leading slash
-        //const markdownUrl = getMarkdownUrl(path || 'example.md'); // Default to 'example.md' if no path
-		const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
-		const repositoryPath = config.repository; // e.g., "portfolio"
+        // Extract the path from the query parameter or URL path
+        const urlParams = new URLSearchParams(window.location.search);
+        let path = urlParams.get('path'); // Get the path from the query parameter
 
-		// Remove the repository path from the full path
-		const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
-	
-		// Remove leading slash and default to 'example.md' if no path is provided
-		const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
-	
-		// Construct the markdown URL
-		const markdownUrl = getMarkdownUrl(path);
-		
-		
-		
-        // Fetch and process the markdown file
-        axios.get(markdownUrl)
-            .then(async (response) => {
-                if (!response.data) {
-                    throw new Error('Markdown file is empty or invalid');
-                }
-                //const markdownContent = response.data;
+        if (!path) {
+            // If no query parameter, extract the path from the URL
+            const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
+            const repositoryPath = config.repository; // e.g., "portfolio"
 
-                // Step 2: Fetch the raw content using the download_url
-                const downloadUrl = response.data.download_url;
-                const markdownResponse = await axios.get(downloadUrl);
+            // Remove the repository path from the full path
+            const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
 
-                if (!markdownResponse.data) {
-                    throw new Error('Markdown file is empty or invalid');
-                }
-
-                const markdownContent = markdownResponse.data;
-				
-				
-                // Parse markdown
-                const { pageParams, sections } = parseMarkdown(markdownContent);
-
-                // Load template
-                const templateName = pageParams.template || config.defaultTemplate;
-                const Template = await loadTemplate(templateName);
-                if (!Template) {
-                    throw new Error('Template not found');
-                }
-
-                // Parse sections
-                const parsedSections = await Promise.all(
-                    sections.map(async (section) => {
-                        if (!section) return null;
-
-                        if (section.type === 'markdown') {
-                            return {
-                                type: 'markdown',
-                                content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                            };
-                        } else if (section.type === 'component') {
-                            // Load component
-                            let [category, componentName] = section.name.split('.');
-                            if (componentName === undefined) {
-                                componentName = category;
-                            }
-                            const Component = await loadComponent(`${category}/${componentName}`);
-                            if (!Component) {
-                                return {
-                                    type: 'error',
-                                    content: `Component ${section.name} not found`,
-                                };
-                            }
-                            return {
-                                type: 'component',
-                                content: <Component content={section.content} />,
-                            };
-                        }
-                        return null;
-                    })
-                );
-
-                // Filter out null values
-                const filteredSections = parsedSections.filter(section => section !== null);
-
-                // Set content
-                setContent(
-                    <Template variables={pageParams}>
-                        {filteredSections.map((section, index) => (
-                            <React.Fragment key={index}>
-                                {section.content}
-                            </React.Fragment>
-                        ))}
-                    </Template>
-                );
-            })
-            .catch((error) => {
-                console.error('Error loading markdown file:', error);
-                setContent(<div>Error loading markdown file: {error.message}</div>);
-            });
+            // Remove leading slash and default to 'example.md' if no path is provided
+            path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
+        }
+		console.log('App path : ', path);
+        // Initialize the app with the path
+        initApp(path);
     }, []);
 
     return (
@@ -214,4 +234,8 @@ const App = () => {
     );
 };
 
+// Export App for regular process
 export default App;
+
+// Render the app (for non-404 pages)
+ReactDOM.render(<App />, document.getElementById('root'));
