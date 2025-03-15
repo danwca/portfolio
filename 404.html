@@ -2,7 +2,10 @@
 <html>
 <head>
     <title>My Portfolio</title>
-    <script>
+    <script type="module">
+        // Import the initApp function from app.js
+        import { initApp } from './app.js';
+
         // Extract the path from the URL
         const fullPath = window.location.pathname; // e.g., "/portfolio/example.md"
         const repositoryName = "portfolio"; // Replace with your repository name
@@ -13,33 +16,13 @@
         // Remove leading slash and default to 'example.md' if no path is provided
         const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
 
-        // Construct the URL for the markdown file
-        const markdownUrl = `https://raw.githubusercontent.com/danwca/portfolio/main/docs/${path}`;
-
-        // Check if the file exists
-        fetch(markdownUrl)
-            .then(response => {
-                if (response.ok) {
-                    // File exists: Redirect to the root URL with the path as a query parameter
-                    window.location.href = `/${repositoryName}/?path=${encodeURIComponent(path)}`;
-                } else {
-                    // File does not exist: Show 404 message
-                    document.body.innerHTML = `
-                        <h1>404 - Page Not Found</h1>
-                        <p>The requested page does not exist.</p>
-                    `;
-                }
-            })
-            .catch(error => {
-                // Show 404 message if there's an error
-                document.body.innerHTML = `
-                    <h1>404 - Page Not Found</h1>
-                    <p>The requested page does not exist.</p>
-                `;
-            });
+        // Initialize the app with the path
+        initApp(path);
     </script>
 </head>
 <body>
-    <p>Loading...</p>
+    <div id="root">
+        <p>Loading...</p>
+    </div>
 </body>
 </html>
