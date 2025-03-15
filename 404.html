@@ -21,7 +21,7 @@
             .then(response => {
                 if (response.ok) {
                     // File exists: Redirect to the root URL with the path as a query parameter
-                    window.location.href = `/$(repositoryName)/?path=${encodeURIComponent(path)}`;
+                    window.location.href = `/${repositoryName}/?path=${encodeURIComponent(path)}`;
                 } else {
                     // File does not exist: Show 404 message
                     document.body.innerHTML = `
