@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/portfolio/static/css/main.e506747d.css",
-    "main.js": "/portfolio/static/js/main.a8afd5ff.js",
+    "main.js": "/portfolio/static/js/main.640bbe71.js",
     "static/js/2005.656105c3.chunk.js": "/portfolio/static/js/2005.656105c3.chunk.js",
     "static/css/7494.f432086e.chunk.css": "/portfolio/static/css/7494.f432086e.chunk.css",
     "static/js/7494.efc683c0.chunk.js": "/portfolio/static/js/7494.efc683c0.chunk.js",
@@ -114,7 +114,7 @@
     "static/media/udemy-wordmark-1.svg": "/portfolio/static/media/udemy-wordmark-1.bcc9fb2094ad1d22043f.svg",
     "index.html": "/portfolio/index.html",
     "main.e506747d.css.map": "/portfolio/static/css/main.e506747d.css.map",
-    "main.a8afd5ff.js.map": "/portfolio/static/js/main.a8afd5ff.js.map",
+    "main.640bbe71.js.map": "/portfolio/static/js/main.640bbe71.js.map",
     "2005.656105c3.chunk.js.map": "/portfolio/static/js/2005.656105c3.chunk.js.map",
     "7494.f432086e.chunk.css.map": "/portfolio/static/css/7494.f432086e.chunk.css.map",
     "7494.efc683c0.chunk.js.map": "/portfolio/static/js/7494.efc683c0.chunk.js.map",
@@ -200,6 +200,6 @@
   },
   "entrypoints": [
     "static/css/main.e506747d.css",
-    "static/js/main.a8afd5ff.js"
+    "static/js/main.640bbe71.js"
   ]
 }

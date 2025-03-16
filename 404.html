@@ -2,65 +2,16 @@
 <html>
 <head>
     <title>My Portfolio - 404</title>
-    <link href="/portfolio/static/css/main.e506747d.css" rel="stylesheet">
-    <script>
-        // Initialize the Redux store
-        const { configureStore } = require('@reduxjs/toolkit');
-        const { Provider } = require('react-redux');
-        const { createRoot } = require('react-dom/client');
-        const App = require('./App').default;
-
-        // Define the initial state and slice
-        const initialThemeState = {
-            mode: 'light',
-            uiColor: 'purple',
-            theme: {
-                color: 'rgb(0, 31, 63)',
-                backgroundColor: "rgb(237, 249, 254)",
-            },
-            nonThemeColor: 'black'
-        };
-
-        const themeSlice = require('@reduxjs/toolkit').createSlice({
-            name: 'theme',
-            initialState: initialThemeState,
-            reducers: {
-                changeThemeColor(state, action) {
-                    state.theme.color = action.payload;
-                },
-                setMode(state, action) {
-                    if (action.payload === 'dark') {
-                        state.mode = 'dark';
-                        state.theme.color = 'cyan';
-                        state.theme.backgroundColor = 'rgb(0, 31, 63)';
-                        state.nonThemeColor = 'white';
-                    } else {
-                        state.mode = 'light';
-                        state.theme = initialThemeState.theme;
-                        state.nonThemeColor = 'black';
-                    }
-                }
-            }
-        });
-
-        const store = configureStore({
-            reducer: themeSlice.reducer
-        });
-
-        // Render the app with the Provider
-        const container = document.getElementById('root');
-        const root = createRoot(container);
-        root.render(
-            <Provider store={store}>
-                <App />
-            </Provider>
-        );
+    <link href="%CSS_PATH%" rel="stylesheet">
+	<script>
+        // Set a global variable to indicate this is 404.html
+        window.is404 = true;
     </script>
 </head>
 <body>
     <div id="root">
         <p>Loading...</p>
     </div>
-    <script src="/portfolio/static/js/main.a8afd5ff.js"></script>
+    <script src="%JS_PATH%"></script>
 </body>
 </html>
