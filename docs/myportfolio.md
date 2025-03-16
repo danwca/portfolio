@@ -3,7 +3,7 @@ title: About Me
 author: John Doe
 date: 2023-10-01
 ---
-<!-- component:project.projects -->
+<!-- component:Project.Projects -->
 # My Projects 
 
 This is a paragraph with a [link](https://example.com).
