@@ -1,6 +1,8 @@
 <!-- page: {"title": "My Page", "template": "custom", "author": "John Doe"} -->
 
-
+<anytag> 
+  custom page 
+</anytag>
 <!-- component:Navbar.Navbar -->
 firstName: Abhishek
 lastName: Kumar
