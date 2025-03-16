@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import config from './config.json';
-import { useSelector } from "react-redux";
-import ReactDOM from 'react-dom';
+import { useSelector, Provider } from 'react-redux';
+import { createRoot } from 'react-dom/client'; // Use createRoot from react-dom/client
+import store from './store/theme'; // Ensure the Redux store is imported
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -50,7 +51,7 @@ const loadComponent = async (componentPath) => {
 const parseMarkdown = (markdown) => {
     // Extract <!-- page: ... --> parameters
     const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
-	console.log("check input:", markdown);
+    console.log("check input:", markdown);
     const pageParamsMatch = markdown.match(pageParamsRegex);
     let pageParams = {};
 
@@ -96,146 +97,171 @@ const parseMarkdown = (markdown) => {
 // Construct GitHub raw URL for markdown files
 const getMarkdownUrl = (path) => {
     const { githubaccount, repository } = config;
-
-    // Get the base URL of the app (e.g., "https://danwca.github.io/portfolio")
-    const baseUrl = window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/');
-
-    // Construct the raw GitHub URL
-    // return `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${path}`;
     return `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs/${path}`;
-
 };
-
 
 // Initialize the app with the file path
 export const initApp = (path) => {
     const { githubaccount, repository } = config;
 
-	const markdownUrl = getMarkdownUrl(path);		
-	
-	// Fetch and process the markdown file
-	axios.get(markdownUrl)
-       .then(async (response) => {
-			if (!response.data) {
-				throw new Error('Markdown file is empty or invalid');
-			}
-			//const markdownContent = response.data;
-	
-			// Step 2: Fetch the raw content using the download_url
-			const downloadUrl = response.data.download_url;
-			const markdownResponse = await axios.get(downloadUrl);
-	
-			if (!markdownResponse.data) {
-				throw new Error('Markdown file is empty or invalid');
-			}
-	
-			const markdownContent = markdownResponse.data;
-	
-	
-			// Parse markdown
-			const { pageParams, sections } = parseMarkdown(markdownContent);
-	
-			// Load template
-			const templateName = pageParams.template || config.defaultTemplate;
-			const Template = await loadTemplate(templateName);
-			if (!Template) {
-				throw new Error('Template not found');
-			}
-	
-			// Parse sections
-			const parsedSections = await Promise.all(
-            sections.map(async (section) => {
-                if (!section) return null;
+    const markdownUrl = getMarkdownUrl(path);
 
-                if (section.type === 'markdown') {
-                    return {
-                        type: 'markdown',
-                        content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                    };
-                } else if (section.type === 'component') {
-                    // Load component
-                    let [category, componentName] = section.name.split('.');
-                    if (componentName === undefined) {
-                        componentName = category;
-                    }
-                    const Component = await loadComponent(`${category}/${componentName}`);
-                    if (!Component) {
+    // Fetch and process the markdown file
+    axios.get(markdownUrl)
+        .then(async (response) => {
+            if (!response.data) {
+                throw new Error('Markdown file is empty or invalid');
+            }
+
+            // Fetch the raw content using the download_url
+            const downloadUrl = response.data.download_url;
+            const markdownResponse = await axios.get(downloadUrl);
+
+            if (!markdownResponse.data) {
+                throw new Error('Markdown file is empty or invalid');
+            }
+
+            const markdownContent = markdownResponse.data;
+
+            // Parse markdown
+            const { pageParams, sections } = parseMarkdown(markdownContent);
+
+            // Debug: Print page parameters
+            console.log('Page Parameters:', pageParams);
+
+            // Load template
+            const templateName = pageParams.template || config.defaultTemplate;
+            const Template = await loadTemplate(templateName);
+            if (!Template) {
+                throw new Error('Template not found');
+            }
+
+            // Debug: Print template
+            console.log('Template:', Template);
+
+            // Parse sections
+            const parsedSections = await Promise.all(
+                sections.map(async (section) => {
+                    if (!section) return null;
+
+                    if (section.type === 'markdown') {
                         return {
-                            type: 'error',
-                            content: `Component ${section.name} not found`,
+                            type: 'markdown',
+                            content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                        };
+                    } else if (section.type === 'component') {
+                        // Load component
+                        let [category, componentName] = section.name.split('.');
+                        if (componentName === undefined) {
+                            componentName = category;
+                        }
+                        const Component = await loadComponent(`${category}/${componentName}`);
+                        if (!Component) {
+                            return {
+                                type: 'error',
+                                content: `Component ${section.name} not found`,
+                            };
+                        }
+                        return {
+                            type: 'component',
+                            content: <Component content={section.content} />,
                         };
                     }
-                    return {
-                        type: 'component',
-                        content: <Component content={section.content} />,
-                    };
-                }
-                return null;
-            })
-        );
+                    return null;
+                })
+            );
 
-        // Filter out null values
-        const filteredSections = parsedSections.filter(section => section !== null);
+            // Filter out null values
+            const filteredSections = parsedSections.filter(section => section !== null);
 
-		// Render the content
-		ReactDOM.render(
-			<Template variables={pageParams}>
-				{filteredSections.map((section, index) => (
-					<React.Fragment key={index}>
-						{section.content}
-					</React.Fragment>
-				))}
-			</Template>,
-			document.getElementById('root')
-			);
-		})
-		.catch((error) => {
-			console.error('Error loading markdown file:', error);
-			ReactDOM.render(
-				<div className="error-page">
-					<h1>404 - Page Not Found</h1>
-					<p>The requested page does not exist.</p>
-				</div>,
-				document.getElementById('root')
-			);
-		});
+            // Debug: Print filtered sections
+            console.log('Filtered Sections:', filteredSections);
+
+            // Render the content
+            const root = createRoot(document.getElementById('root'));
+            root.render(
+                <Provider store={store}>
+                    <Template variables={pageParams}>
+                        {filteredSections.map((section, index) => {
+                            // Debug: Print section information
+                            console.log(`Section ${index}:`, section);
+
+                            return (
+                                <React.Fragment key={index}>
+                                    {section.content}
+                                </React.Fragment>
+                            );
+                        })}
+                    </Template>
+                </Provider>
+            );
+        })
+        .catch((error) => {
+            console.error('Error loading markdown file:', error);
+            const root = createRoot(document.getElementById('root'));
+            root.render(
+                <Provider store={store}>
+                    <div className="error-page">
+                        <h1>404 - Page Not Found</h1>
+                        <p>The requested page does not exist.</p>
+                    </div>
+                </Provider>
+            );
+        });
+};
+
+// Extract path from URL
+export const getPathFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    let path = urlParams.get('path'); // Get the path from the query parameter
+
+    if (!path) {
+        // If no query parameter, extract the path from the URL
+        const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
+        const repositoryPath = config.repository; // e.g., "portfolio"
+
+        // Remove the repository path from the full path
+        const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
+
+        // Remove leading slash and default to 'example.md' if no path is provided
+        path = pathWithoutRepository.replace(/^\//, '') || 'killer-abhi.md';
+    }
+
+    return path;
 };
 
 // Main App component
 const App = () => {
-    const [content, setContent] = useState(null);
-    const theme = useSelector(state => state.theme);
+    const theme = useSelector((state) => {
+        console.log('Redux State:', state);
+        return state;
+    });
 
     useEffect(() => {
-        // Extract the path from the query parameter or URL path
-        const urlParams = new URLSearchParams(window.location.search);
-        let path = urlParams.get('path'); // Get the path from the query parameter
+        // Extract the path from the URL
+        const path = getPathFromUrl();
+        console.log('App path:', path);
 
-        if (!path) {
-            // If no query parameter, extract the path from the URL
-            const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
-            const repositoryPath = config.repository; // e.g., "portfolio"
-
-            // Remove the repository path from the full path
-            const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
-
-            // Remove leading slash and default to 'example.md' if no path is provided
-            path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
-        }
-		console.log('App path : ', path);
         // Initialize the app with the path
         initApp(path);
     }, []);
 
     return (
-        <div className="App" style={theme}>
-            {content ? content : <p>Loading...</p>}
+        <div className="App" style={theme.theme}>
+            <div id="root">
+                <p>Loading...</p>
+            </div>
         </div>
     );
 };
 
+// Render the app with the Provider
+const root = createRoot(document.getElementById('root'));
+root.render(
+    <Provider store={store}>
+        <App />
+    </Provider>
+);
+
 // Export App for regular process
 export default App;
-
-// Render the app (for non-404 pages)
-ReactDOM.render(<App />, document.getElementById('root'));

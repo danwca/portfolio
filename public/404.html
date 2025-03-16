@@ -1,25 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Portfolio</title>
-    <script type="module">
-        // Import the initApp function from app.js
-        import { initApp } from './app.js';
-		import config from './config.json';
-
-        // Extract the path from the URL
-        const fullPath = window.location.pathname; // e.g., "/portfolio/example.md"
-        const repositoryName = config.repository; // Replace with your repository name
-
-        // Remove the repository name from the path
-        const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryName}`), '');
-
-        // Remove leading slash and default to 'example.md' if no path is provided
-        const path = pathWithoutRepository.replace(/^\//, '') || 'example.md';
-
-		console.log("404 path: ", path);
-        // Initialize the app with the path
-        initApp(path);
+    <title>My Portfolio - 404</title>
+	<script>
+        // Set a global variable to indicate this is 404.html
+        window.is404 = true;
     </script>
 </head>
 <body>

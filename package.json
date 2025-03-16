@@ -27,12 +27,23 @@
     "typewriter-effect": "^2.19.0",
     "web-vitals": "^2.1.4"
   },
-  "scripts": {
+
+	"scripts": {
+		"start": "react-app-rewired start",
+		"build": "react-app-rewired build",
+		"test": "react-app-rewired test",
+		"eject": "react-scripts eject",
+		"predeploy": "npm run build ",
+		"deploy": "gh-pages -d build"
+	},  
+  "scripts1": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:404": "react-scripts build --entry ./src/404.js --output-filename 404.bundle.js",
+    "postbuild": "node scripts/replace-hash.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && npm run build:404 && postbuild",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
@@ -54,7 +65,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "react-app-rewired": "^2.2.1"
   },
   "files": [
     "docs",
@@ -66,6 +78,7 @@
     "public",
     "README.md",
     "skills.png",
+    "scripts",
     "src"
   ]
 }
