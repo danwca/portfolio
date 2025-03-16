@@ -128,8 +128,14 @@ export const initApp = (path) => {
 
             // Debug: Print page parameters
             console.log('Page Parameters:', pageParams);
-
-            // Load template
+			// Update the document title if a title is provided in the markdown file
+			if (pageParams.title) {
+				document.title = pageParams.title;
+			} else {
+				document.title = config.defaultTitle || 'My Portfolio'; // Fallback to a default title
+			}
+            
+			// Load template
             const templateName = pageParams.template || config.defaultTemplate;
             const Template = await loadTemplate(templateName);
             if (!Template) {

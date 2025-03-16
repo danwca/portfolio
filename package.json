@@ -79,6 +79,7 @@
     "README.md",
     "skills.png",
     "scripts",
+	"config-overrides.js",
     "src"
   ]
 }
