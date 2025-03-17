@@ -6,7 +6,7 @@
 <!-- Navbar.Navbar -->
 firstName: Abhishek
 lastName: Kumar
-<!-- / Navbar.Navbar -->
+<!-- /Navbar.Navbar -->
 
 # My Projects
 
