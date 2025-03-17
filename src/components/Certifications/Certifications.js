@@ -3,7 +3,7 @@ import classes from "./certifications.module.css";
 import CreateCertificate from "./CreateCertificate";
 import { useSelector } from "react-redux";
 
-const Certifications = ({ content }) => {
+const Certifications = ({ content, params }) => {
     const nonThemeColor = useSelector((state) => state.nonThemeColor);
 
     // Parse the markdown content into a list of certifications

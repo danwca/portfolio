@@ -19,22 +19,6 @@ const loadTemplate = async (templateName) => {
     }
 };
 
-// Load template assets (CSS and JS)
-const loadTemplateAssets = (templateName) => {
-    const cssPath = `${process.env.PUBLIC_URL}/${templateName}/styles.css`;
-    const jsPath = `${process.env.PUBLIC_URL}/${templateName}/script.js`;
-
-    // Load CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = cssPath;
-    document.head.appendChild(link);
-
-    // Load JS
-    const script = document.createElement('script');
-    script.src = jsPath;
-    document.body.appendChild(script);
-};
 
 // Dynamic component loading
 const loadComponent = async (componentPath) => {
@@ -49,49 +33,78 @@ const loadComponent = async (componentPath) => {
 
 // Parse markdown file
 const parseMarkdown = (markdown) => {
-    // Extract <!-- page: ... --> parameters
-    const pageParamsRegex = /<!-- page: ([\s\S]*?) -->/;
-    console.log("check input:", markdown);
-    const pageParamsMatch = markdown.match(pageParamsRegex);
-    let pageParams = {};
-
-    if (pageParamsMatch) {
-        try {
-            pageParams = JSON.parse(pageParamsMatch[1].trim());
-        } catch (error) {
-            console.error('Error parsing page parameters:', error);
-        }
-    }
-
-    // Extract sections (markdown or component blocks)
-    const body = markdown.replace(pageParamsRegex, '').trim();
     const sections = [];
-    const componentRegex = /<!-- component:(\w+\.\w+) -->([\s\S]*?)<!-- \/component -->/g;
+
+    // Regex for <!-- componentgroup.componentname --> markdown code <!-- /componentgroup.componentname -->
+    const componentRegex1 = /<!--\s*([\w.]+)\s*-->([\s\S]*?)<!--\s*\/\1\s*-->/g;
+
+    // Regex for <!-- componentgroup.componentname markdown code /-->
+    const componentRegex2 = /<!--\s*([\w.]+)\s*([\s\S]*?)\s*\/-->/g;
 
     let lastIndex = 0;
     let match;
-    while ((match = componentRegex.exec(body)) !== null) {
+
+    // Process the first regex
+    while ((match = componentRegex1.exec(markdown)) !== null) {
         if (match.index > lastIndex) {
             sections.push({
                 type: 'markdown',
-                content: body.slice(lastIndex, match.index),
+                content: markdown.slice(lastIndex, match.index),
             });
         }
+
+        const [fullMatch, componentName, content] = match;
+
+        // Parse the component name and group
+        const [componentGroup, component] = componentName.includes('.')
+            ? componentName.split('.')
+            : ['system', componentName]; // Default group is 'system'
+
+        // Add the component section
         sections.push({
             type: 'component',
-            name: match[1],
-            content: match[2].trim(),
+            name: `${componentGroup}.${component}`,
+            content: content.trim(),
         });
-        lastIndex = match.index + match[0].length;
+
+        lastIndex = match.index + fullMatch.length;
     }
-    if (lastIndex < body.length) {
+
+    // Process the second regex
+    while ((match = componentRegex2.exec(markdown)) !== null) {
+        if (match.index > lastIndex) {
+            sections.push({
+                type: 'markdown',
+                content: markdown.slice(lastIndex, match.index),
+            });
+        }
+
+        const [fullMatch, componentName, content] = match;
+
+        // Parse the component name and group
+        const [componentGroup, component] = componentName.includes('.')
+            ? componentName.split('.')
+            : ['system', componentName]; // Default group is 'system'
+
+        // Add the component section
+        sections.push({
+            type: 'component',
+            name: `${componentGroup}.${component}`,
+            content: content.trim(),
+        });
+
+        lastIndex = match.index + fullMatch.length;
+    }
+
+    // Handle remaining markdown content
+    if (lastIndex < markdown.length) {
         sections.push({
             type: 'markdown',
-            content: body.slice(lastIndex),
+            content: markdown.slice(lastIndex),
         });
     }
 
-    return { pageParams, sections };
+    return sections;
 };
 
 // Construct GitHub raw URL for markdown files
@@ -124,10 +137,53 @@ export const initApp = (path) => {
             const markdownContent = markdownResponse.data;
 
             // Parse markdown
-            const { pageParams, sections } = parseMarkdown(markdownContent);
-
-            // Debug: Print page parameters
+            const  sections  = parseMarkdown(markdownContent);
+			// Initialize pageParams
+			let pageParams = {};
+            
+			// Debug: Print page parameters
             console.log('Page Parameters:', pageParams);
+	
+			// Process sections sequentially
+			const renderedSections = [];
+			for (const section of sections) {
+				if (section.type === 'markdown') {
+					// Render markdown content
+					renderedSections.push({
+						type: 'markdown',
+						content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+					});
+				} else if (section.type === 'component') {
+					// Load and execute the component
+					const [componentGroup, componentName] = section.name.split('.');
+					const Component = await loadComponent(`${componentGroup}/${componentName}`);
+					if (!Component) {
+						renderedSections.push({
+							type: 'error',
+							content: `Component ${section.name} not found`,
+						});
+						continue;
+					}
+	
+					// Execute the component and capture its output
+					const componentOutput = await Component({
+						content: section.content,
+						pageParams,
+					});
+	
+					// Update pageParams if the component modifies it
+					if (componentOutput.pageParams) {
+						Object.assign(pageParams, componentOutput.pageParams); // Only updates, does not replace
+					}
+	
+					// Add the rendered component output to the sections
+					renderedSections.push({
+						type: 'component',
+						content: componentOutput.content,
+					});
+				}
+			}
+	
 			// Update the document title if a title is provided in the markdown file
 			if (pageParams.title) {
 				document.title = pageParams.title;
@@ -145,50 +201,16 @@ export const initApp = (path) => {
             // Debug: Print template
             console.log('Template:', Template);
 
-            // Parse sections
-            const parsedSections = await Promise.all(
-                sections.map(async (section) => {
-                    if (!section) return null;
-
-                    if (section.type === 'markdown') {
-                        return {
-                            type: 'markdown',
-                            content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                        };
-                    } else if (section.type === 'component') {
-                        // Load component
-                        let [category, componentName] = section.name.split('.');
-                        if (componentName === undefined) {
-                            componentName = category;
-                        }
-                        const Component = await loadComponent(`${category}/${componentName}`);
-                        if (!Component) {
-                            return {
-                                type: 'error',
-                                content: `Component ${section.name} not found`,
-                            };
-                        }
-                        return {
-                            type: 'component',
-                            content: <Component content={section.content} />,
-                        };
-                    }
-                    return null;
-                })
-            );
-
-            // Filter out null values
-            const filteredSections = parsedSections.filter(section => section !== null);
 
             // Debug: Print filtered sections
-            console.log('Filtered Sections:', filteredSections);
+            console.log('renderedSections Sections:', renderedSections);
 
             // Render the content
             const root = createRoot(document.getElementById('root'));
             root.render(
                 <Provider store={store}>
                     <Template variables={pageParams}>
-                        {filteredSections.map((section, index) => {
+                        {renderedSections.map((section, index) => {
                             // Debug: Print section information
                             console.log(`Section ${index}:`, section);
 

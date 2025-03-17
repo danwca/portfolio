@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 
 import ImageUrl from "./dp.jpeg";
 
-const AboutMe = ({ content }) => {
+const AboutMe = ({ content, params }) => {
     const data = {};
     content.split('\n').forEach((line) => {
         const [key, value] = line.split(':').map((part) => part.trim());

@@ -10,7 +10,7 @@ import Button from "../UI/Button";
 import ProgrammingSkills from "../ProfessionalSkillset/ProgrammingSkills";
 import { useSelector } from "react-redux";
 
-const Projects = ({ content }) => {
+const Projects = ({ content, params }) => {
     const nonThemeColor = useSelector(state => state.nonThemeColor);
     const uiColor = useSelector(state => state.uiColor);
 

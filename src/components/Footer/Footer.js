@@ -4,7 +4,7 @@ import CopyrightIcon from '@mui/icons-material/Copyright';
 import "./footer.css";
 import { useSelector } from "react-redux";
 
-function Footer({ content }){
+function Footer({ content, params }){
     const nonThemeColor=useSelector(state=>state.nonThemeColor);
     let currentYear=new Date().getFullYear();
 	

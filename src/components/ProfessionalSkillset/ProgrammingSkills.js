@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import config from '../../config.json';
 import axios from 'axios';
 
-const ProgrammingSkills = ({ content }) => {
+const ProgrammingSkills = ({ content, params }) => {
     const uiColor = useSelector(state => state.uiColor);
     const nonThemeColor = useSelector(state => state.nonThemeColor);
 
