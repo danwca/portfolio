@@ -12,7 +12,7 @@ import Routes from "./Routes";
 
 import PersonalData from "../Data/PersonalData";
 
-const Navbar = ({ content }) => {
+const Navbar = ({ content, params }) => {
 
     const data = {};
     content.split('\n').forEach((line) => {

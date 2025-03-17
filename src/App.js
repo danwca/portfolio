@@ -114,128 +114,105 @@ const getMarkdownUrl = (path) => {
 };
 
 // Initialize the app with the file path
-export const initApp = (path) => {
+export const initApp = async (path) => {
     const { githubaccount, repository } = config;
 
     const markdownUrl = getMarkdownUrl(path);
 
-    // Fetch and process the markdown file
-    axios.get(markdownUrl)
-        .then(async (response) => {
-            if (!response.data) {
-                throw new Error('Markdown file is empty or invalid');
+    try {
+        // Fetch the markdown file
+        const response = await axios.get(markdownUrl);
+        if (!response.data) {
+            throw new Error('Markdown file is empty or invalid');
+        }
+
+        // Fetch the raw content using the download_url
+        const downloadUrl = response.data.download_url;
+        const markdownResponse = await axios.get(downloadUrl);
+
+        if (!markdownResponse.data) {
+            throw new Error('Markdown file is empty or invalid');
+        }
+
+        const markdownContent = markdownResponse.data;
+
+        // Parse markdown
+        const sections = parseMarkdown(markdownContent);
+
+        // Initialize pageParams
+        let pageParams = {};
+
+        // Process sections sequentially
+        const renderedSections = [];
+        for (const section of sections) {
+            if (section.type === 'markdown') {
+                // Render markdown content
+                renderedSections.push({
+                    type: 'markdown',
+                    content: <ReactMarkdown>{section.content}</ReactMarkdown>,
+                });
+            } else if (section.type === 'component') {
+                // Load and execute the component
+                const [componentGroup, componentName] = section.name.split('.');
+                const Component = await loadComponent(`${componentGroup}/${componentName}`);
+                if (!Component) {
+                    renderedSections.push({
+                        type: 'error',
+                        content: `Component ${section.name} not found`,
+                    });
+                    continue;
+                }
+
+                // Render the component using JSX
+                const componentOutput = (
+					<Provider store={store}>
+					<Component
+                        content={section.content}
+                        pageParams={pageParams}
+                    />
+					</Provider>
+				);
+				console.log(section.name, ' params - ', pageParams);
+                // Add the rendered component output to the sections
+                renderedSections.push({
+                    type: 'component',
+                    content: componentOutput,
+                });
             }
+        }
 
-            // Fetch the raw content using the download_url
-            const downloadUrl = response.data.download_url;
-            const markdownResponse = await axios.get(downloadUrl);
+        // Load template after all components have been processed
+        const templateName = pageParams.template || config.defaultTemplate;
+        const Template = await loadTemplate(templateName);
+        if (!Template) {
+            throw new Error('Template not found');
+        }
 
-            if (!markdownResponse.data) {
-                throw new Error('Markdown file is empty or invalid');
-            }
-
-            const markdownContent = markdownResponse.data;
-
-            // Parse markdown
-            const  sections  = parseMarkdown(markdownContent);
-			// Initialize pageParams
-			let pageParams = {};
-            
-			// Debug: Print page parameters
-            console.log('Page Parameters:', pageParams);
-	
-			// Process sections sequentially
-			const renderedSections = [];
-			for (const section of sections) {
-				if (section.type === 'markdown') {
-					// Render markdown content
-					renderedSections.push({
-						type: 'markdown',
-						content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-					});
-				} else if (section.type === 'component') {
-					// Load and execute the component
-					const [componentGroup, componentName] = section.name.split('.');
-					const Component = await loadComponent(`${componentGroup}/${componentName}`);
-					if (!Component) {
-						renderedSections.push({
-							type: 'error',
-							content: `Component ${section.name} not found`,
-						});
-						continue;
-					}
-	
-					// Execute the component and capture its output
-					const componentOutput = await Component({
-						content: section.content,
-						pageParams,
-					});
-	
-					// Update pageParams if the component modifies it
-					if (componentOutput.pageParams) {
-						Object.assign(pageParams, componentOutput.pageParams); // Only updates, does not replace
-					}
-	
-					// Add the rendered component output to the sections
-					renderedSections.push({
-						type: 'component',
-						content: componentOutput.content,
-					});
-				}
-			}
-	
-			// Update the document title if a title is provided in the markdown file
-			if (pageParams.title) {
-				document.title = pageParams.title;
-			} else {
-				document.title = config.defaultTitle || 'My Portfolio'; // Fallback to a default title
-			}
-            
-			// Load template
-            const templateName = pageParams.template || config.defaultTemplate;
-            const Template = await loadTemplate(templateName);
-            if (!Template) {
-                throw new Error('Template not found');
-            }
-
-            // Debug: Print template
-            console.log('Template:', Template);
-
-
-            // Debug: Print filtered sections
-            console.log('renderedSections Sections:', renderedSections);
-
-            // Render the content
-            const root = createRoot(document.getElementById('root'));
-            root.render(
-                <Provider store={store}>
-                    <Template variables={pageParams}>
-                        {renderedSections.map((section, index) => {
-                            // Debug: Print section information
-                            console.log(`Section ${index}:`, section);
-
-                            return (
-                                <React.Fragment key={index}>
-                                    {section.content}
-                                </React.Fragment>
-                            );
-                        })}
-                    </Template>
-                </Provider>
-            );
-        })
-        .catch((error) => {
-            console.error('Error loading markdown file:', error);
-            const root = createRoot(document.getElementById('root'));
-            root.render(
-                <Provider store={store}>
-                    <div className="error-page">
-                        <h1>404 - Page Not Found</h1>
-                        <p>The requested page does not exist.</p>
-                    </div>
-                </Provider>
-            );
-        });
+        // Render the content
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <Provider store={store}>
+                <Template variables={pageParams}>
+                    {renderedSections.map((section, index) => (
+                        <React.Fragment key={index}>
+                            {section.content}
+                        </React.Fragment>
+                    ))}
+                </Template>
+            </Provider>
+        );
+    } catch (error) {
+        console.error('Error loading markdown file:', error);
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <Provider store={store}>
+                <div className="error-page">
+                    <h1>404 - Page Not Found</h1>
+                    <p>The requested page does not exist.</p>
+                </div>
+            </Provider>
+        );
+    }
 };
 
 // Extract path from URL

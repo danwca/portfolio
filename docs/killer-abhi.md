@@ -1,4 +1,4 @@
-<!-- page: {"title": "My Page", "template": "custom", "author": "John Doe"} -->
+<!-- page {"title": "My Page", "template": "custom", "author": "John Doe"} /-->
 
 
 <!-- Navbar.Navbar -->
