@@ -1,4 +1,6 @@
-<!-- page {"title": "My Page", "template": "custom", "author": "John Doe"} /-->
+
+<!-- page {"title": "Abhishek's Page", "template": "portfolio", "author": "Abhishek Kumar"} /-->
+
 
 
 <!-- Navbar.Navbar -->

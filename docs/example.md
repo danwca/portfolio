@@ -3,16 +3,16 @@
 <anytag> 
   custom page 
 </anytag>
-<!-- component:Navbar.Navbar -->
+<!-- Navbar.Navbar -->
 firstName: Abhishek
 lastName: Kumar
-<!-- /component -->
+<!-- /Navbar.Navbar -->
 
 # My Projects
 
 This is a paragraph with a [link](https://example.com).
 
-<!-- component:Project.Projects -->
+<!-- Project.Projects -->
 ## Project 1
 - **Title**: Project 1
 - **Description**: This is a description of Project 1.
@@ -71,10 +71,10 @@ This is a paragraph with a [link](https://example.com).
 - **Link:** https://github.com/killer-abhi/calculator.git
 - **Updated:** Sep 26 2022
 
-<!-- /component -->
+<!-- /Project.Projects -->
 
 
-<!-- component:ProfessionalSkillset.ProgrammingSkills -->
+<!-- ProfessionalSkillset.ProgrammingSkills -->
 ## Programming Skills
 * JavaScript, ![JavaScript](svg/JavaScript.svg)
 * Node.Js, ![NodeJs](svg/NodeJs.svg)
@@ -84,10 +84,10 @@ This is a paragraph with a [link](https://example.com).
 * ReactJS, ![ReactJS](svg/ReactJS.svg)
 * C++, ![CPP](svg/CPP.svg)
 * Redux, ![Redux](svg/Redux.svg)
-<!-- /component -->
+<!-- /ProfessionalSkillset.ProgrammingSkills -->
 
 
-<!-- component:AboutMe.AboutMe -->
+<!-- AboutMe.AboutMe -->
 ```
 firstName: "Abhishek",
 lastName: "Kumar",
@@ -99,11 +99,11 @@ aboutMe: "Hi Everyone, I am Abhishek Kumar from Uttar Pradesh, India.I learned C
 resumeLink: "https://drive.google.com/file/d/1vfnzDcN4uATaNZ7cc9kdKvep9ZBUN_be/view?usp=sharing",
 imageUrl: ""
 ```
-<!-- /component -->
+<!-- /AboutMe.AboutMe -->
 
 ## Certifications
 
-<!-- component:Certifications.Certifications -->
+<!-- Certifications.Certifications -->
 ## Certification
 - **Title**: Web Development BootCamp
 - **Instructor**: Angela Yu
@@ -131,7 +131,7 @@ imageUrl: ""
 - **Instructor**: Maximilian Schwarzmuller
 - **Link**: https://drive.google.com/file/d/1iGTIn8QLcY1JCqWE-CCIWE5QP5c2cHZp/view?usp=sharing
 - **Platform**: udemy
-<!-- /component -->
+<!-- /Certifications.Certifications -->
 
 
 ## Credits
