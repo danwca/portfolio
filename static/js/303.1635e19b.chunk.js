@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[303],{2303:(e,o,s)=>{e.exports=s.p+"static/media/udemy-wordmark-1.bcc9fb2094ad1d22043f.svg"}}]);

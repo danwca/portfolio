@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[3438],{3438:(c,t,o)=>{o.r(t),o.d(t,{default:()=>n});const n={getInTouch:"GetInTouch_getInTouch__8uivw",getInTouchCard:"GetInTouch_getInTouchCard__S569U",contactCard:"GetInTouch_contactCard__7Fszd",contactIcon:"GetInTouch_contactIcon__sO6Jz",contactValue:"GetInTouch_contactValue__IdTCl"}}}]);
-//# sourceMappingURL=3438.54c27420.chunk.js.map

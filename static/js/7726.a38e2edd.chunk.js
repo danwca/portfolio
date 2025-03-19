@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[7726],{7726:(o,t,e)=>{e.r(t),e.d(t,{default:()=>n});const n={btn:"button_btn__PMIVv"}}}]);
-//# sourceMappingURL=7726.a38e2edd.chunk.js.map

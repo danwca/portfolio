@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[5312],{5312:(e,s,a)=>{a.r(s),a.d(s,{default:()=>t});var r=a(579);const t=e=>{let{content:s,pageParams:a}=e;const t=JSON.parse(s);return Object.assign(a,t),{content:(0,r.jsx)("div",{children:(0,r.jsxs)("p",{children:["Updated pageParams: ",JSON.stringify(a)]})}),pageParams:a}}}}]);
-//# sourceMappingURL=5312.107149ec.chunk.js.map

@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkpersonal_portfolio=self.webpackChunkpersonal_portfolio||[]).push([[4776,6260],{4776:(r,e,a)=>{a.r(e),a.d(e,{default:()=>l});const l={Card:"card_Card__CuZ7S"}},6260:(r,e,a)=>{a.r(e),a.d(e,{default:()=>d});a(5043);var l=a(9456),o=a(4776),s=a(579);const d=r=>{const e=(0,l.d4)((r=>r.uiColor));return(0,s.jsx)("div",{className:`${o.default.Card} ${r.className}`,style:{borderColor:e},children:r.children})}}}]);
-//# sourceMappingURL=6260.bea9beb6.chunk.js.map
