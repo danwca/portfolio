@@ -3,7 +3,7 @@ title: About Me
 author: John Doe
 date: 2023-10-01
 ---
-<!-- component:Project.Projects -->
+<!-- Project.Projects -->
 # My Projects 
 
 This is a paragraph with a [link](https://example.com).
@@ -17,7 +17,7 @@ This is a paragraph with a [link](https://example.com).
 - **Title**: Project 2
 - **Description**: This is a description of Project 2.
 - **Link**: https://example.com/project2
-<!-- /component -->
+<!-- /Project.Projects -->
 
 
 # Any Other Markdown Content
