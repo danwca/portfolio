@@ -41,7 +41,7 @@ title: "My Page"
 date: 2024-03-08
 ---  
 
-# About Me {component=aboutMe}
+# About Me 
     firstName: "Daniel",
     lastName: "Wang",
     nickName:"<  Doctor Dan >",
