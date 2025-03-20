@@ -1,9 +1,8 @@
 {
-  "templatesPath": "https://raw.githubusercontent.com/danwca/portfolio/main/templates",
-  "componentsPath": "/components",
-  "docsPath": "https://raw.githubusercontent.com/danwca/portfolio/main/docs",
   "defaultTemplate": "default",
   "docsfolder":"/docs",
   "repository":"portfolio",
-  "githubaccount":"danwca"
+  "githubaccount":"danwca",
+  "defaultTitle": "My Portfolio",
+  "homepage":"killer-abhi.md"
 }

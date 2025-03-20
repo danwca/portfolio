@@ -1,5 +1,5 @@
 import React from 'react';
-import './portfolio/app.css';
+//import './portfolio/app.css';
 import store from '../store/theme'; // 确保已经创建了 Redux Store
 import { useSelector, Provider } from 'react-redux';
 
@@ -17,9 +17,9 @@ const DefaultTemplate = ({ children, variables }) => {
             <header>
                 <h1> {variables.title}</h1>
             </header>
-            <main>
+            <div>
                 {children}
-            </main>
+            </div>
             <footer>
                 <p></p>
             </footer>

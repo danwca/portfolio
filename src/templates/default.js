@@ -17,9 +17,9 @@ const DefaultTemplate = ({ children, variables }) => {
             <header>
                 <h1> {variables.title}</h1>
             </header>
-            <main>
+            <div>
                 {children}
-            </main>
+            </div>
             <footer>
                 <p>Default Footer Content</p>
             </footer>

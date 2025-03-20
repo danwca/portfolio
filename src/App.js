@@ -247,8 +247,11 @@ export const initApp = async (path) => {
 // Extract path from URL
 export const getPathFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
+    const { homepage } = config;
     let path = urlParams.get('path'); // Get the path from the query parameter
 
+	const homepagefile = homepage||'README.md';  
+	
     if (!path) {
         // If no query parameter, extract the path from the URL
         const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
@@ -258,7 +261,7 @@ export const getPathFromUrl = () => {
         const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
 
         // Remove leading slash and default to 'example.md' if no path is provided
-        path = pathWithoutRepository.replace(/^\//, '') || 'killer-abhi.md';
+        path = pathWithoutRepository.replace(/^\//, '') || homepagefile;
     }
 
     return path;
