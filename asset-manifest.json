@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/portfolio/static/css/main.9c850c25.css",
-    "main.js": "/portfolio/static/js/main.1132afb4e425dc6902df.js",
+    "main.js": "/portfolio/static/js/main.a163d0855e36a99c5595.js",
     "notFound.css": "/portfolio/static/css/notFound.9c850c25.css",
-    "notFound.js": "/portfolio/static/js/notFound.52c52189d1498cb64c39.js",
+    "notFound.js": "/portfolio/static/js/notFound.3de17086bfe3d6123ebc.js",
     "static/css/607.c1a47aa6.chunk.css": "/portfolio/static/css/607.c1a47aa6.chunk.css",
-    "static/js/607.f794b604.chunk.js": "/portfolio/static/js/607.f794b604.chunk.js",
+    "static/js/607.ad75bdc9.chunk.js": "/portfolio/static/js/607.ad75bdc9.chunk.js",
     "static/js/612.a7e2068e.chunk.js": "/portfolio/static/js/612.a7e2068e.chunk.js",
     "static/js/538.1478fc89.chunk.js": "/portfolio/static/js/538.1478fc89.chunk.js",
     "static/js/367.41762128.chunk.js": "/portfolio/static/js/367.41762128.chunk.js",
@@ -29,15 +29,15 @@
     "index.html": "/portfolio/index.html",
     "404.html": "/portfolio/404.html",
     "main.9c850c25.css.map": "/portfolio/static/css/main.9c850c25.css.map",
-    "main.js.map": "/portfolio/static/js/main.1132afb4e425dc6902df.js.map",
+    "main.js.map": "/portfolio/static/js/main.a163d0855e36a99c5595.js.map",
     "notFound.9c850c25.css.map": "/portfolio/static/css/notFound.9c850c25.css.map",
-    "notFound.js.map": "/portfolio/static/js/notFound.52c52189d1498cb64c39.js.map",
+    "notFound.js.map": "/portfolio/static/js/notFound.3de17086bfe3d6123ebc.js.map",
     "607.c1a47aa6.chunk.css.map": "/portfolio/static/css/607.c1a47aa6.chunk.css.map",
-    "607.f794b604.chunk.js.map": "/portfolio/static/js/607.f794b604.chunk.js.map",
+    "607.ad75bdc9.chunk.js.map": "/portfolio/static/js/607.ad75bdc9.chunk.js.map",
     "612.a7e2068e.chunk.js.map": "/portfolio/static/js/612.a7e2068e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.9c850c25.css",
-    "static/js/main.1132afb4e425dc6902df.js"
+    "static/js/main.a163d0855e36a99c5595.js"
   ]
 }
