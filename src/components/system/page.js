@@ -1,14 +1,25 @@
-const page = ({ content, pageParams }) => {
-    // Parse the content to update pageParams
-    const newParams = JSON.parse(content);
-    Object.assign(pageParams, newParams);
+import React from 'react';
 
-    // Return the rendered content and updated pageParams
-    return (
-            <div>
 
-            </div>
-    )
+// Special function to extract parameters from content
+export const parseParameters = (content) => {
+    const params = JSON.parse(content);
+    return params; // Return the parameters to be merged into pageParams
 };
 
-export default page;
+
+
+
+const Page = ({ content, pageParams }) => {
+    // Parse the content to update pageParams
+
+
+    // Return the rendered content as JSX
+    return (
+        <div>
+            {/* Render any content if needed */}
+        </div>
+    );
+};
+
+export default Page;
