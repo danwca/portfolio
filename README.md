@@ -25,7 +25,7 @@ let me know if you are succeed on your journey, ...
 
 
 ## credit
-1. the original version,  
+1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio),  
 
 ## ways to help the project:
 1. ⭐️ the repository. 
