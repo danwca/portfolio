@@ -1,10 +1,11 @@
 <!-- page {title:"user manual"}-->
 
-1. ³ÌĞòËùÌá¹©µÄÀ¸Ä¿£¬ °üÀ¨£º header, navbar, footer, µÈ£» ³ÌĞòËùÌá¹©µÄ¶ÔÏó£¬ °üÀ¨£º system, project, skill, certificate, task, plan, document, issue, function, code, µÈµÈ£» ³ÌĞòËùÌá¹©µÄÄ£°å£¬ÏµÍ³Ä£°å£¬ ¶ÔÏóÄ£°å£» `markdown`ÎÄ¼şµÄ±êÇ©£» 
+1. ç¨‹åºæ‰€æä¾›çš„æ ç›®ï¼Œ åŒ…æ‹¬ï¼š header, navbar, footer, ç­‰ï¼› ç¨‹åºæ‰€æä¾›çš„å¯¹è±¡ï¼Œ åŒ…æ‹¬ï¼š system, project, skill, certificate, task, plan, document, issue, function, code, ç­‰ç­‰ï¼› ç¨‹åºæ‰€æä¾›çš„æ¨¡æ¿ï¼Œç³»ç»Ÿæ¨¡æ¿ï¼Œ å¯¹è±¡æ¨¡æ¿ï¼› `markdown`æ–‡ä»¶çš„æ ‡ç­¾ï¼› 
 
-### `markdown`ÎÄ¼şµÄ±êÇ©
+### `markdown`æ–‡ä»¶çš„æ ‡ç­¾
 1. `project.projects`
 2. ``
+
 
 
 
