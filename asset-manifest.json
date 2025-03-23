@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/portfolio/static/css/main.6f089c62.css",
-    "main.js": "/portfolio/static/js/main.2134d6f413eab1ff1403.js",
+    "main.js": "/portfolio/static/js/main.cd6aea4308cdf167ffe4.js",
     "notFound.css": "/portfolio/static/css/notFound.6f089c62.css",
-    "notFound.js": "/portfolio/static/js/notFound.eff253df2483246a0ec2.js",
+    "notFound.js": "/portfolio/static/js/notFound.0270f0ad857cd92a89b7.js",
     "static/css/607.c1a47aa6.chunk.css": "/portfolio/static/css/607.c1a47aa6.chunk.css",
-    "static/js/607.f794b604.chunk.js": "/portfolio/static/js/607.f794b604.chunk.js",
+    "static/js/607.ad75bdc9.chunk.js": "/portfolio/static/js/607.ad75bdc9.chunk.js",
     "static/js/612.a7e2068e.chunk.js": "/portfolio/static/js/612.a7e2068e.chunk.js",
     "static/js/538.1478fc89.chunk.js": "/portfolio/static/js/538.1478fc89.chunk.js",
     "static/js/367.41762128.chunk.js": "/portfolio/static/js/367.41762128.chunk.js",
@@ -29,15 +29,15 @@
     "index.html": "/portfolio/index.html",
     "404.html": "/portfolio/404.html",
     "main.6f089c62.css.map": "/portfolio/static/css/main.6f089c62.css.map",
-    "main.js.map": "/portfolio/static/js/main.2134d6f413eab1ff1403.js.map",
+    "main.js.map": "/portfolio/static/js/main.cd6aea4308cdf167ffe4.js.map",
     "notFound.6f089c62.css.map": "/portfolio/static/css/notFound.6f089c62.css.map",
-    "notFound.js.map": "/portfolio/static/js/notFound.eff253df2483246a0ec2.js.map",
+    "notFound.js.map": "/portfolio/static/js/notFound.0270f0ad857cd92a89b7.js.map",
     "607.c1a47aa6.chunk.css.map": "/portfolio/static/css/607.c1a47aa6.chunk.css.map",
-    "607.f794b604.chunk.js.map": "/portfolio/static/js/607.f794b604.chunk.js.map",
+    "607.ad75bdc9.chunk.js.map": "/portfolio/static/js/607.ad75bdc9.chunk.js.map",
     "612.a7e2068e.chunk.js.map": "/portfolio/static/js/612.a7e2068e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6f089c62.css",
-    "static/js/main.2134d6f413eab1ff1403.js"
+    "static/js/main.cd6aea4308cdf167ffe4.js"
   ]
 }
