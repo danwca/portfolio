@@ -1,8 +1,8 @@
 {
   "defaultTemplate": "default",
-  "docsfolder": "docs",
-  "repository": "portfolio",
+  "docsfolder": "/docs",
+  "repository": "danwca.github.io",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
-  "homepage": "killer-abhi.md"
+  "homepage": "README.md"
 }
