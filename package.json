@@ -34,7 +34,7 @@
 		"test": "react-app-rewired test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build ",
-		"deploy": "gh-pages -d build"
+		"deploy": "node scripts/deploy.js"
 	},  
   "scripts1": {
     "start": "react-scripts start",
@@ -82,4 +82,8 @@
 	"config-overrides.js",
     "src"
   ],
+  "repositories": [
+    "https://github.com/danwca/portfolio.git",
+    "https://github.com/danwca/danwca.github.io.git"
+  ]
 }
