@@ -1,6 +1,6 @@
 {
   "defaultTemplate": "default",
-  "docsfolder": "/docs",
+  "docsfolder": "docs",
   "repository": "portfolio",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
