@@ -6,19 +6,6 @@
  */
 let cachedConfig = null; // Cache for the configuration
 
-async function checkRepoExists(repo) {
-  const { githubaccount } = config;
-  const url = `https://api.github.com/repos/${githubaccount}/${repo}`;
-
-  try {
-    const response = await fetch(url);
-    return response.ok;
-  } catch (error) {
-    return false;
-  }
-}
-
-
 export async function getConfig() {
     // If the configuration is already cached, return it
     if (cachedConfig) {
@@ -27,7 +14,7 @@ export async function getConfig() {
 
     try {
         // Fetch config.json from the public folder
-        const response = await fetch('/config.json');
+        const response = await fetch('./config.json');
         const config = await response.json();
 		console.log(config)
         // Cache the configuration
