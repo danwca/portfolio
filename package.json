@@ -1,7 +1,6 @@
 {
   "name": "personal-portfolio",
   "version": "0.1.0",
-  "homepage": "https://danwca.github.io/portfolio",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -21,21 +20,20 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.30.0",
     "react-scripts": "^5.0.1",
+    "rehype-raw": "^7.0.0",
     "serialize-javascript": "^6.0.2",
     "shell-quote": "^1.8.2",
     "terser": "^5.39.0",
     "typewriter-effect": "^2.19.0",
     "web-vitals": "^2.1.4"
   },
-
-	"scripts": {
-		"start": "react-app-rewired start",
-		"build": "react-app-rewired build",
-		"test": "react-app-rewired test",
-		"eject": "react-scripts eject",
-		"predeploy": "npm run build ",
-		"deploy": "node scripts/deploy.js"
-	},  
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject",
+    "deploy": "node scripts/deploy.js"
+  },
   "scripts1": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -79,11 +77,8 @@
     "README.md",
     "skills.png",
     "scripts",
-	"config-overrides.js",
+    "config-overrides.js",
     "src"
   ],
-  "repositories": [
-    "https://github.com/danwca/portfolio.git",
-    "https://github.com/danwca/danwca.github.io.git"
-  ]
+  "homepage": "http://localhost:3000"
 }

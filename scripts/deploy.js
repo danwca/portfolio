@@ -1,102 +1,106 @@
-const ghpages = require('gh-pages');
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const ghpages = require('gh-pages');
 
-// Read package.json
-const packageJsonPath = path.join(__dirname, '../package.json');
-const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-
-// Get the list of repositories
-const repositories = packageJson.repositories;
-
-if (!repositories || !Array.isArray(repositories) || repositories.length === 0) {
-  console.error('No repositories found in package.json');
-  process.exit(1);
+// Function to run a command
+function runCommand(command) {
+  console.log(`Running: ${command}`);
+  execSync(command, { stdio: 'inherit' });
 }
 
-// Path to config.json in the build folder
-const buildConfigPath = path.join(__dirname, '../build/config.json');
+// Function to set homepage in package.json
+function setHomepage(homepage) {
+  const packageJsonPath = path.join(__dirname, '../package.json');
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
 
-// Function to update config.json with repository information
-function updateConfig(repoUrl) {
-  // Parse the repository URL to extract the GitHub account and repository name
-  const repoMatch = repoUrl.match(/github\.com[:/]([^/]+)\/([^/]+)\.git/);
-  if (!repoMatch) {
-    console.error(`Invalid repository URL format: ${repoUrl}`);
-    return false;
-  }
+  // Update homepage
+  packageJson.homepage = homepage;
 
-  const githubAccount = repoMatch[1];
-  const repository = repoMatch[2];
+  // Save package.json
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
-  // Check if a repository-specific config file exists in the src folder
-  const repoConfigPath = path.join(__dirname, `../config.${repository}.json`);
-
-  if (fs.existsSync(repoConfigPath)) {
-    // If a repository-specific config exists, copy it to the build folder
-    fs.copyFileSync(repoConfigPath, buildConfigPath);
-    console.log(`Copied repository-specific config (config.${repository}.json) to build/config.json`);
-  } else {
-    // If no repository-specific config exists, read the default config.json
-    const defaultConfigPath = path.join(__dirname, '../public/config.json');
-    if (!fs.existsSync(defaultConfigPath)) {
-      console.error(`Default config.json not found in src folder`);
-      return false;
-    }
-
-    // Read the default config.json
-    const config = JSON.parse(fs.readFileSync(defaultConfigPath, 'utf8'));
-
-    // Update the repository and githubaccount fields
-    config.repository = repository;
-    config.githubaccount = githubAccount;
-
-    // Write the updated config to the build folder
-    fs.writeFileSync(buildConfigPath, JSON.stringify(config, null, 2));
-    console.log(`Updated config.json for repository: ${repository}, GitHub account: ${githubAccount}`);
-  }
-
-  return true;
+  console.log(`Set homepage to: ${homepage}`);
 }
 
-// Function to deploy to a single repository
-function deployToRepo(repoUrl) {
-  return new Promise((resolve, reject) => {
-    // Update config.json before deployment
-    if (!updateConfig(repoUrl)) {
-      reject(new Error(`Failed to update config.json for ${repoUrl}`));
-      return;
-    }
+// Function to deploy to a repository
+function deployToRepo(configPath) {
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-    // Proceed with deployment
-    ghpages.publish(
-      'build', // The folder containing your built frontend app
-      {
-        repo: repoUrl,
-        dotfiles: true,
-      },
-      (err) => {
-        if (err) {
-          console.error(`Failed to deploy to ${repoUrl}:`, err);
-          reject(err);
-        } else {
-          console.log(`Successfully deployed to ${repoUrl}`);
-          resolve();
-        }
-      }
-    );
+  // Generate homepage from customDomain or repository
+  const homepage = config.customDomain
+    ? `https://${config.customDomain}`
+    : `https://${config.githubaccount}.github.io/${config.repository}`;
+
+  // Set homepage
+  setHomepage(homepage);
+
+  // Build the app
+  runCommand('npm run build');
+
+  // Prepare config.json (excluding customDomain)
+  const { customDomain, dns, ...configWithoutSensitiveFields } = config;
+  const buildConfigPath = path.join(__dirname, '../build/config.json');
+  fs.writeFileSync(buildConfigPath, JSON.stringify(configWithoutSensitiveFields, null, 2));
+
+  // Copy CNAME file to the build directory (if customDomain exists)
+  if (config.customDomain) {
+    const cnamePath = path.join(__dirname, '../public/CNAME');
+    fs.writeFileSync(cnamePath, config.customDomain);
+  }
+
+  // Deploy the build directory
+  ghpages.publish('build', {
+    branch: 'gh-pages',
+    repo: `https://github.com/${config.githubaccount}/${config.repository}.git`,
+    dotfiles: true, // Include dotfiles (e.g., CNAME)
+  }, (err) => {
+    if (err) console.error(err);
+    else console.log(`Deployed to ${config.repository} successfully!`);
   });
 }
 
-// Deploy to all repositories
-async function deployToAllRepos() {
-  for (const repoUrl of repositories) {
-    try {
-      await deployToRepo(repoUrl);
-    } catch (error) {
-      console.error(`Deployment to ${repoUrl} failed:`, error);
-    }
+// Function to create config.json for localhost
+function createLocalhostConfig() {
+  const localhostConfigPath = path.join(__dirname, '../config/config.localhost.json');
+  if (fs.existsSync(localhostConfigPath)) {
+    const localhostConfig = JSON.parse(fs.readFileSync(localhostConfigPath, 'utf8'));
+
+    // Prepare config.json for localhost
+    const { customDomain, dns, ...configWithoutSensitiveFields } = localhostConfig;
+    const buildConfigPath = path.join(__dirname, '../build/config.json');
+    fs.writeFileSync(buildConfigPath, JSON.stringify(configWithoutSensitiveFields, null, 2));
+
+    console.log('Created config.json for localhost.');
+  } else {
+    console.error('config.localhost.json not found in the config folder');
   }
 }
 
-deployToAllRepos();
+// Main function
+function main() {
+  // Get all config files in the config folder (excluding config.localhost.json)
+  const configDir = path.join(__dirname, '../config');
+  const configFiles = fs.readdirSync(configDir).filter(
+    (file) => file.startsWith('config.') && file.endsWith('.json') && file !== 'config.localhost.json'
+  );
+
+  if (configFiles.length === 0) {
+    console.error('No config files found in the config folder');
+    process.exit(1);
+  }
+
+  // Deploy to all repositories
+  for (const configFile of configFiles) {
+    const configPath = path.join(configDir, configFile);
+    deployToRepo(configPath);
+  }
+
+  // Recover for localhost
+  console.log('Recovering for localhost...');
+  setHomepage('http://localhost:3000');
+  createLocalhostConfig(); // Create config.json for localhost
+  runCommand('npm run build');
+}
+
+main();

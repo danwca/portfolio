@@ -2,10 +2,12 @@ import './app.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import config from './config.json';
 import { useSelector, Provider } from 'react-redux';
 import { createRoot } from 'react-dom/client'; // Use createRoot from react-dom/client
 import store from './store/theme'; // Ensure the Redux store is imported
+import { getRepoFileUrl } from './utils/github'; // Import the function
+import { config } from './utils/config'; // Import the config
+import rehypeRaw from 'rehype-raw';
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -83,13 +85,9 @@ const parseMarkdown = (markdown) => {
     return sections;
 };
 
-// Construct GitHub raw URL for markdown files
-const getMarkdownUrl = (path) => {
-    const { githubaccount, repository } = config;
-    return `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs/${path}`;
-};
-
-
+// Parse markdown file
+const renderMarkdown = (sections) => {
+} 
 
 const recursiveMerge = (target, source) => {
     for (const key in source) {
@@ -106,19 +104,136 @@ const recursiveMerge = (target, source) => {
 	//target.test ="here works";
 };
 
-// Initialize the app with the file path
-export const initApp = async (path) => {
+
+// Add this function to process markdown links
+const processMarkdownLinks = async (markdownContent, currentFilePath) => {
+  // Get the base GitHub raw URL without the file path
+  const { githubaccount, repository, docsfolder } = await config;
+  const baseRawUrl = `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/${docsfolder ? docsfolder + '/' : ''}`;
+  
+  // Get the directory of the current file (remove filename if present)
+  const getCurrentDir = (filePath) => {
+    const lastSlashIndex = filePath.lastIndexOf('/');
+    return lastSlashIndex >= 0 ? filePath.substring(0, lastSlashIndex + 1) : '';
+  };
+  
+  const currentDir = getCurrentDir(currentFilePath);
+
+  // Process image links ![alt](path)
+  let processedContent = markdownContent.replace(
+    /!\[([^\]]*)\]\(([^)]+)\)/g,
+    (match, altText, linkPath) => {
+      // Skip if it's already a full URL or data URI
+      if (/^(https?:|\/|data:)/.test(linkPath)) {
+        return match;
+      }
+      
+      // Handle different types of relative paths
+      let fullPath;
+      if (linkPath.startsWith('./')) {
+        fullPath = currentDir + linkPath.substring(2);
+      } else if (linkPath.startsWith('../')) {
+        // Handle parent directory paths
+        let dir = currentDir;
+        let path = linkPath;
+        while (path.startsWith('../')) {
+          dir = dir.substring(0, dir.lastIndexOf('/', dir.length - 2) + 1);
+          path = path.substring(3);
+        }
+        fullPath = dir + path;
+      } else {
+        fullPath = currentDir + linkPath;
+      }
+      
+      // Construct GitHub raw URL
+      const rawUrl = baseRawUrl + fullPath;
+      console.log(rawUrl, match, currentFilePath );
+      return `![${altText}](${rawUrl})`;
+    }
+  );
+  console.log(processedContent);
+  // Process regular links [text](path)
+  processedContent = processedContent.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    (match, linkText, linkPath) => {
+      // Skip if it's already a full URL
+      if (/^(https?:|\/)/.test(linkPath)) {
+        return match;
+      }
+      
+      // Skip markdown file links
+      if (linkPath.endsWith('.md')) {
+        return match;
+      }
+      
+      // Handle different types of relative paths (same as above)
+      let fullPath;
+      if (linkPath.startsWith('./')) {
+        fullPath = currentDir + linkPath.substring(2);
+      } else if (linkPath.startsWith('../')) {
+        let dir = currentDir;
+        let path = linkPath;
+        while (path.startsWith('../')) {
+          dir = dir.substring(0, dir.lastIndexOf('/', dir.length - 2) + 1);
+          path = path.substring(3);
+        }
+        fullPath = dir + path;
+      } else {
+        fullPath = currentDir + linkPath;
+      }
+      
+      // Construct GitHub raw URL
+      const rawUrl = baseRawUrl + fullPath;
+      
+      return `[${linkText}](${rawUrl})`;
+    }
+  );
+  console.log(processedContent);
+  return processedContent;
+};
+
+// Extract path from URL
+export const getPathFromUrl = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const { homefile,repository } = await config;
+    let path = urlParams.get('path'); // Get the path from the query parameter
+
+	const homepagefile = homefile||'README.md';  
+	
+    if (!path) {
+        // If no query parameter, extract the path from the URL
+        const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
+
+        // Remove the repository path from the full path
+        const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repository}`), '');
+
+        // Remove leading slash and default to 'example.md' if no path is provided
+        path = pathWithoutRepository.replace(/^\//, '') || homepagefile;
+    }
+	console.log(path,repository, window.location.pathname, config);
+    return path;
+};
+
+
+// Initialize the app with the file path, share with 404.js
+export const initApp = async () => {
     const { githubaccount, repository } = config;
 
-    const markdownUrl = getMarkdownUrl(path);
+    const path = await getPathFromUrl(); // Assuming getPathFromUrl is defined elsewhere
+	const RepoFileUrl = await getRepoFileUrl(path);
 
+	
+	// if extension name of RepoFileUrl is not .md then provide default response according to the file type
+
+	// if RepoFileUrl is a markdown file then 
     try {
         // Fetch the markdown file
-        const response = await axios.get(markdownUrl);
+        const response = await axios.get(RepoFileUrl);
         if (!response.data) {
             throw new Error('Markdown file is empty or invalid');
         }
 
+		/*
         // Fetch the raw content using the download_url
         const downloadUrl = response.data.download_url;
         const markdownResponse = await axios.get(downloadUrl);
@@ -127,8 +242,11 @@ export const initApp = async (path) => {
             throw new Error('Markdown file is empty or invalid');
         }
 
-        const markdownContent = markdownResponse.data;
-
+        //const markdownContent = markdownResponse.data;
+		*/
+        // Process markdown links before further processing		
+        const markdownContent = await processMarkdownLinks(response.data, path);
+		console.log(markdownContent);
         // Parse markdown
         const sections = parseMarkdown(markdownContent);
 		console.log('sections : ', sections)
@@ -137,13 +255,24 @@ export const initApp = async (path) => {
 
         // Process sections sequentially
         const renderedSections = [];
+		let index =0; 
         for (const section of sections) {
             if (section.type === 'markdown') {
-                // Render markdown content
-                renderedSections.push({
-                    type: 'markdown',
-                    content: <ReactMarkdown>{section.content}</ReactMarkdown>,
-                });
+				const DebugMarkdown = ({ children }) => {
+				console.log('Markdown content before rendering:', children);
+				const rendered = <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{children}</ReactMarkdown>;
+				
+				// If you want to inspect the rendered output (React elements)
+				console.log('Markdown rendered output:', rendered);
+				
+				return rendered;
+				};
+				
+				// Usage with section index
+				renderedSections.push({
+				type: 'markdown',
+				content: <DebugMarkdown sectionIndex={index}>{section.content}</DebugMarkdown>,
+				});
             } else if (section.type === 'component') {
                 // Load and execute the component
                 const [componentGroup, componentName] = section.name.split('.');
@@ -195,6 +324,7 @@ export const initApp = async (path) => {
                     content: componentOutput,
                 });
             }
+			index++;
         }
 
         // Update the document title if a title is provided in the markdown file
@@ -244,43 +374,27 @@ export const initApp = async (path) => {
     }
 };
 
-// Extract path from URL
-export const getPathFromUrl = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const { homepage } = config;
-    let path = urlParams.get('path'); // Get the path from the query parameter
-
-	const homepagefile = homepage||'README.md';  
-	
-    if (!path) {
-        // If no query parameter, extract the path from the URL
-        const fullPath = window.location.pathname; // e.g., "/portfolio/path/to/file.md"
-        const repositoryPath = config.repository; // e.g., "portfolio"
-
-        // Remove the repository path from the full path
-        const pathWithoutRepository = fullPath.replace(new RegExp(`^/${repositoryPath}`), '');
-
-        // Remove leading slash and default to 'example.md' if no path is provided
-        path = pathWithoutRepository.replace(/^\//, '') || homepagefile;
-    }
-
-    return path;
+// Construct GitHub raw URL for markdown files
+const getMarkdownUrl = (path) => {
+    const { githubaccount, repository } = config;
+    return `https://api.github.com/repos/${githubaccount}/${repository}/contents/docs/${path}`;
 };
 
-// Main App component
+
+
+// Main App component, share with 404.js
 const App = () => {
     const theme = useSelector((state) => {
-        console.log('Redux State:', state);
+        //console.log('Redux State:', state);
         return state;
     });
 
     useEffect(() => {
         // Extract the path from the URL
-        const path = getPathFromUrl();
-        console.log('App path:', path);
-
+        //const path = getPathFromUrl();
+ 
         // Initialize the app with the path
-        initApp(path);
+        initApp();
     }, []);
 
     return (

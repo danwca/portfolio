@@ -1,8 +1,9 @@
 import classes from "./programmingSkills.module.css";
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import config from '../../config.json';
+//import config from '../../config.json';
 import axios from 'axios';
+import { getRepoFileUrl } from '../../utils/github'; // Import the function
 
 const ProgrammingSkills = ({ content, params }) => {
     const uiColor = useSelector(state => state.uiColor);
@@ -25,10 +26,10 @@ const ProgrammingSkills = ({ content, params }) => {
     // Fetch SVG content for each skill
     useEffect(() => {
         const fetchSvgContent = async () => {
-            const { githubaccount, repository } = config;
 
             const svgPromises = skillItems.map(async (item) => {
-                const svgUrl = `https://raw.githubusercontent.com/${githubaccount}/${repository}/main/docs/${item.svgPath}`;
+                //const svgUrl = await getRepoFileUrl(item.svgPath);
+                const svgUrl = item.svgPath;
                 try {
                     const response = await axios.get(svgUrl);
                     return { [item.svgPath]: response.data };

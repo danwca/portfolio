@@ -4,5 +4,6 @@
   "repository": "danwca.github.io",
   "githubaccount": "danwca",
   "defaultTitle": "My Github",
-  "homepage": "README.md"
+  "homefile": "README.md",
+  "customDomain": "danw.bluejays.tech"
 }

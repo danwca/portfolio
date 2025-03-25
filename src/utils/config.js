@@ -14,6 +14,7 @@ export async function getConfig() {
 
     try {
         // Fetch config.json from the public folder
+		//console.log(`Fetching: ${new URL('./config.json', import.meta.url)}`);
         const response = await fetch('./config.json');
         const config = await response.json();
 		console.log(config)

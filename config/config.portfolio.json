@@ -1,8 +1,9 @@
 {
   "defaultTemplate": "default",
   "docsfolder": "docs",
-  "repository": "danwca.github.io",
+  "repository": "portfolio",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
-  "homepage": "killer-abhi.md"
+  "homefile": "killer-abhi.md",
+ "customDomain": "portfolio.bluejays.tech"
 }
