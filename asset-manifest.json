@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/static/css/main.6f089c62.css",
-    "main.js": "/static/js/main.5ab757e25c441fcd9d63.js",
-    "notFound.css": "/static/css/notFound.6f089c62.css",
-    "notFound.js": "/static/js/notFound.1142b41e0e06b606bda5.js",
+    "main.css": "/static/css/main.9c850c25.css",
+    "main.js": "/static/js/main.0e1db581f267bcc74d35.js",
+    "notFound.css": "/static/css/notFound.9c850c25.css",
+    "notFound.js": "/static/js/notFound.c5d81e1e5107b3bf2bc0.js",
     "static/css/607.c1a47aa6.chunk.css": "/static/css/607.c1a47aa6.chunk.css",
     "static/js/607.ad75bdc9.chunk.js": "/static/js/607.ad75bdc9.chunk.js",
     "static/js/612.a7e2068e.chunk.js": "/static/js/612.a7e2068e.chunk.js",
@@ -28,16 +28,16 @@
     "static/media/udemy-wordmark-1.svg": "/static/media/udemy-wordmark-1.bcc9fb2094ad1d22043f.svg",
     "index.html": "/index.html",
     "404.html": "/404.html",
-    "main.6f089c62.css.map": "/static/css/main.6f089c62.css.map",
-    "main.js.map": "/static/js/main.5ab757e25c441fcd9d63.js.map",
-    "notFound.6f089c62.css.map": "/static/css/notFound.6f089c62.css.map",
-    "notFound.js.map": "/static/js/notFound.1142b41e0e06b606bda5.js.map",
+    "main.9c850c25.css.map": "/static/css/main.9c850c25.css.map",
+    "main.js.map": "/static/js/main.0e1db581f267bcc74d35.js.map",
+    "notFound.9c850c25.css.map": "/static/css/notFound.9c850c25.css.map",
+    "notFound.js.map": "/static/js/notFound.c5d81e1e5107b3bf2bc0.js.map",
     "607.c1a47aa6.chunk.css.map": "/static/css/607.c1a47aa6.chunk.css.map",
     "607.ad75bdc9.chunk.js.map": "/static/js/607.ad75bdc9.chunk.js.map",
     "612.a7e2068e.chunk.js.map": "/static/js/612.a7e2068e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6f089c62.css",
-    "static/js/main.5ab757e25c441fcd9d63.js"
+    "static/css/main.9c850c25.css",
+    "static/js/main.0e1db581f267bcc74d35.js"
   ]
 }
