@@ -7,5 +7,5 @@ various styles， https://jamstackthemes.dev/
 
 
 #### about Jekyll
-1. conver markdown file in a Github's repository into a web page. for example, [Quickstart](https://jekyllrb.com/docs/) page is corresponding to [index.md](https://github.com/jekyll/jekyll/blob/master/docs/_docs/index.md) under `jekyll/docs/_docs/` of jekyll-Github;  screenshots for [Quickstart](250320143318.jpg), [index.md](250320143456.jpg)
+1. conver markdown file in a Github's repository into a web page. for example, [Quickstart](https://jekyllrb.com/docs/) page is corresponding to [index.md](https://github.com/jekyll/jekyll/blob/master/docs/_docs/index.md) under `jekyll/docs/_docs/` of jekyll-Github;  screenshots for ![Quickstart](250320143318.jpg), [index.md](250320143456.jpg)
 
