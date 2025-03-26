@@ -42,6 +42,7 @@ const Projects = ({ content, params }) => {
     }	
 	//console.log(projects);
     return (
+		<main>
         <div id="projects">
             <div className={styles.projects}>
                 <section className={styles.projectImg}>
@@ -65,6 +66,7 @@ const Projects = ({ content, params }) => {
                 </a>
             </div>
         </div>
+		</main>
     )
 };
 

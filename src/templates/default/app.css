@@ -16,6 +16,13 @@ html {
 .app-content {
 	margin-top: 5rem;
 }
+.document-title-container {
+    margin-top: 5rem; /* Same as navbar height */
+    text-align: center;
+    width: 100%;
+    padding: 1rem;
+}
+
 @media (max-width: 768px) {
 	.app-content {
 		margin-top: 4rem;

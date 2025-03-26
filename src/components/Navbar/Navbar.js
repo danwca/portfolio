@@ -32,7 +32,7 @@ const Navbar = ({ content, params }) => {
 
     //const mode = useSelector(state => state.mode);
 	const mode = useSelector(state => {
-		console.log(state); // 打印状态
+		//console.log(state); // 打印状态
 		return state.mode;
 	});
     //console.log(mode); // 打印状态

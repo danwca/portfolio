@@ -178,7 +178,7 @@ const processMarkdownLinks = async (markdownContent, currentFilePath) => {
       return `![${altText}](${rawUrl})`;
     }
   );
-  console.log(processedContent);
+  //console.log(processedContent);
   // Process regular links [text](path)
   processedContent = processedContent.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
@@ -215,7 +215,7 @@ const processMarkdownLinks = async (markdownContent, currentFilePath) => {
       return `[${linkText}](${rawUrl})`;
     }
   );
-  console.log(processedContent);
+  //console.log(processedContent);
   return processedContent;
 };
 
@@ -237,7 +237,7 @@ export const getPathFromUrl = async () => {
         // Remove leading slash and default to 'example.md' if no path is provided
         path = pathWithoutRepository.replace(/^\//, '') || homepagefile;
     }
-	console.log(path,repository, window.location.pathname, config);
+	//console.log(path,repository, window.location.pathname, config);
     return path;
 };
 
@@ -278,8 +278,79 @@ export const initApp = async () => {
         let index = 0;
         
         for (const section of sections) {
-            // Your existing section processing logic...
+            if (section.type === 'markdown') {
+				const DebugMarkdown = ({ children }) => {
+				//console.log('Markdown content before rendering:', children);
+				const rendered = <ReactMarkdown  rehypePlugins={[rehypeRaw]}>{children}</ReactMarkdown>;
+				
+				// If you want to inspect the rendered output (React elements)
+				//console.log('Markdown rendered output:', rendered);
+				
+				return rendered;
+				};
+				
+				// Usage with section index
+				renderedSections.push({
+				type: 'markdown',
+				content: <DebugMarkdown sectionIndex={index}>{section.content}</DebugMarkdown>,
+				});
+            } else if (section.type === 'component') {
+                // Load and execute the component
+                const [componentGroup, componentName] = section.name.split('.');
+
+                const ComponentModule = await require(`./components/${componentGroup}/${componentName}.js`);
+                if (!ComponentModule || !ComponentModule.default) {
+                    renderedSections.push({
+                        type: 'error',
+                        content: `Component ${section.name} not found`,
+                    });
+                    continue;
+                }
+
+				console.log(section.name, ' loaded ', ComponentModule);
+                // Check if the component has a `parseParameters` function
+                if (ComponentModule.parseParameters) {
+                    const params = ComponentModule.parseParameters(section.content);
+                    recursiveMerge(pageParams, params); // Merge params into pageParams
+					console.log(section.name, ' hello parseParameters : ', pageParams, params);
+                }else
+				{
+					console.log(section.name , 'does not have parseParameters')
+				}
+				if(ComponentModule.default)
+				{
+					console.log(section.name , ' have page function')
+				}else{
+					console.log(section.name , ' does not have page function')
+				}
+				
+				const Component = ComponentModule.default; // Get the default export (the component itself)
+
+                // Render the component and capture its output
+                const componentOutput = (
+                    <Provider store={store}>
+                        <Component
+                            content={section.content}
+                            pageParams={pageParams} // Pass pageParams as a Map
+                        />
+                    </Provider>
+                );
+
+                console.log(section.name, " returns ", componentOutput);
+                console.log(section.name, " params ", pageParams);
+
+                // Add the rendered component output to the sections
+                renderedSections.push({
+                    type: 'component',
+                    content: componentOutput,
+                });
+            }
+			index++;
         }
+
+        // Update the document title if a title is provided in the markdown file
+        const title =  currentPage.title || pageParams.title || config.defaultTitle || 'My Portfolio';
+        document.title = title;
         
         // Use page-specific template if defined, otherwise use file-wide template
         const templateName = currentPage.template || pageParams.template || config.defaultTemplate;

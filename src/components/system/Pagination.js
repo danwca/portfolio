@@ -2,32 +2,49 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-const Pagination = ({ variables }) => {
-    const { currentPageId, totalPages } = variables;
+const Pagination = ({content, variables }) => {
+    // Destructure with default values to avoid undefined errors
+    const { currentPageId = '', totalPages = 0 } = variables || {};
+    console.log('Pagination', currentPageId,totalPages);
     
-    // In a real implementation, you would have access to all page IDs
-    // For simplicity, we'll just show previous/next buttons
+    // Return nothing if:
+    // 1. currentPageId is not in the expected format (page-X)
+    // 2. totalPages is not a positive number
+    // 3. There's only one page (no need for pagination)
+    if (!/^page-\d+$/.test(currentPageId) || 
+        !Number.isInteger(totalPages) || 
+        totalPages <= 1) {
+        return null;
+    }
+    
+    // Extract page number safely
+    const currentPageNum = parseInt(currentPageId.split('-')[1], 10);
+    console.log('Pagination', currentPageNum,totalPages);
+    // Additional safety check in case parsing fails
+    if (isNaN(currentPageNum) || currentPageNum < 1 || currentPageNum > totalPages) {
+        return null;
+    }
     
     return (
         <div className="pagination">
             <button 
                 onClick={() => {
                     // Navigate to previous page
-                    window.location.search = `?page=page-${parseInt(currentPageId.split('-')[1]) - 1}`;
+                    window.location.search = `?page=page-${currentPageNum - 1}`;
                 }}
-                disabled={currentPageId === 'page-1'}
+                disabled={currentPageNum === 1}
             >
                 Previous
             </button>
             
-            <span>Page {currentPageId.split('-')[1]} of {totalPages}</span>
+            <span>Page {currentPageNum} of {totalPages}</span>
             
             <button 
                 onClick={() => {
                     // Navigate to next page
-                    window.location.search = `?page=page-${parseInt(currentPageId.split('-')[1]) + 1}`;
+                    window.location.search = `?page=page-${currentPageNum + 1}`;
                 }}
-                disabled={currentPageId === `page-${totalPages}`}
+                disabled={currentPageNum === totalPages}
             >
                 Next
             </button>

@@ -3,15 +3,19 @@
 	align-items: center;
 	justify-content: center;
 }
+/* Ensure navbar remains fixed */
 .navbar {
-	height: 5rem;
-	display: flex;
-	position: fixed;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
-	z-index: 1000;
+    height: 5rem;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background-color: rgb(237, 249, 254); /* Ensure background consistency */
 }
+
 .logoContainer {
 	margin-right: auto;
 	margin-left: 5%;
