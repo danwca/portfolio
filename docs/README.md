@@ -2,11 +2,8 @@
 项目名称: `portfolio`
 
 #### portfolio
-1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio),
+1. the project is based on [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio),
 2. [new version](killer-abhi.md)
-
-#### index
-1. [usage](usage.md)
 
 
 #### 用户需求
@@ -24,7 +21,10 @@
 
 #### 其他
 1. 设计说明，
-2. `Github`使用说明
-3. `node.js`编程说明
+2. `Github`使用说明, API, raw, 外部域名， 404错误， 
+3. `node.js`编程说明， 
+4. 技术说明, error 404, `markdown`解析， 部署程序
 
- 
+
+#### credit
+1. [killer-abhi/Portfolio](https://github.com/killer-abhi/Portfolio) 
