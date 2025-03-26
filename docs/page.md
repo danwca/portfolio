@@ -12,9 +12,9 @@ This is the first page (page parameters). It can define the template for all pag
 
 This is the content of page 1.
 
-<!-- page.template -->
+
 special-template
-<!-- /page.template -->
+
 
 ===[page-2]===
 
