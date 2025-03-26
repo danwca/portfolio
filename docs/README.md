@@ -24,6 +24,10 @@
 2. `Github`使用说明, API, raw, 外部域名， 404错误， 
 3. `node.js`编程说明， 
 4. 技术说明, error 404, `markdown`解析， 部署程序
+5. [image link](<image link.md>)
+6. [multi-page](<multi-page.md>)
+
+
 
 
 #### credit
