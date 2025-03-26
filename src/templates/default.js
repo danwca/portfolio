@@ -2,7 +2,7 @@ import React from 'react';
 import './default/app.css';
 import store from '../store/theme'; // 确保已经创建了 Redux Store
 import { useSelector, Provider } from 'react-redux';
-
+import Navbar from '../components/Navbar/Navbar';
 
 const DefaultTemplate = ({ children, variables }) => {
     // 打印传入的参数
@@ -14,6 +14,7 @@ const DefaultTemplate = ({ children, variables }) => {
 
     return (
         <div className="App" style={theme.theme}>
+		<Navbar content="" params={variables}/>
             <header>
                 <h1> {variables.title}</h1>
             </header>

@@ -1,7 +1,7 @@
 {
   "defaultTemplate": "default",
-  "docsfolder": "",
-  "repository": "danwca.github.io",
+  "docsfolder": "/docs",
+  "repository": "portfolio",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
   "homefile": "README.md"
