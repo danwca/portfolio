@@ -1,8 +1,8 @@
 # Document Title
 
-<!-- system.template -->
+
 default
-<!-- /system.template -->
+
 
 This is the first page (page parameters). It can define the template for all pages.
 
