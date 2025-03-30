@@ -1,9 +1,5 @@
-<!-- page {
-title: About Me
-author: John Doe
-date: 2023-10-01
-}
-/-->
+<!-- page {"title": "Abhishek's Page", "template": "portfolio", "author": "John Doe"} /-->
+
 <!-- Project.Projects -->
 # My Projects 
 
