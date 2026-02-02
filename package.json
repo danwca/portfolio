@@ -21,6 +21,7 @@
     "react-router-dom": "^6.30.0",
     "react-scripts": "^5.0.1",
     "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
     "serialize-javascript": "^6.0.2",
     "shell-quote": "^1.8.2",
     "terser": "^5.39.0",

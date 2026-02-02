@@ -9,6 +9,7 @@ import { getRepoFileUrl } from './utils/github'; // Import the function
 import { config } from './utils/config'; // Import the config
 import { fetchNavigation } from './utils/navigation'; // Import navigation
 import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
 import fm from 'front-matter'; // Import front-matter parser
 
 // Dynamic template loading
@@ -298,14 +299,17 @@ export const initApp = async () => {
         let index = 0;
 
 
+
         for (const section of sections) {
             if (section.type === 'markdown') {
                 const DebugMarkdown = ({ children }) => {
-                    //console.log('Markdown content before rendering:', children);
-                    const rendered = <ReactMarkdown rehypePlugins={[rehypeRaw]}>{children}</ReactMarkdown>;
+                    // Determine plugins based on config
+                    const plugins = [rehypeRaw];
+                    if (config.allowScripts !== true) {
+                        plugins.push(rehypeSanitize);
+                    }
 
-                    // If you want to inspect the rendered output (React elements)
-                    //console.log('Markdown rendered output:', rendered);
+                    const rendered = <ReactMarkdown rehypePlugins={plugins}>{children}</ReactMarkdown>;
 
                     return rendered;
                 };
@@ -379,11 +383,17 @@ export const initApp = async () => {
         const parts = path.split('/');
         const firstSegment = parts[0];
         let sectionTemplate = null;
+        let sectionKey = "";
+
+        // Check if the first segment is a valid section
+        if (config.sections && config.sections[firstSegment]) {
+            sectionKey = firstSegment;
+        }
 
         // Fetch Navigation for this section
-        // We pass the "virtual" section path (e.g., "docs")
-        // The nav utility will use getRepoFileUrl/getRepoTree to resolve it.
-        const navigationData = await fetchNavigation(firstSegment || "");
+        // Now we pass the correct section key (e.g., "docs" or "")
+        // navigation.js handles resolving key -> folder
+        const navigationData = await fetchNavigation(sectionKey);
         console.log('[App] Navigation Data:', navigationData);
 
         if (config.sections) {

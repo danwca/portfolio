@@ -1,5 +1,6 @@
 {
   "defaultTemplate": "default",
+  "allowScripts": false,
   "repository": "portfolio",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
