@@ -1,3 +1,0 @@
-- [Home](/)
-- [Article Demo](/docs/article_demo.md)
-- [Project Readme](/docs/README.md)
