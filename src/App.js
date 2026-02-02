@@ -402,6 +402,18 @@ export const initApp = async () => {
 
         // Use page-specific template if defined, then section template, then global default
         const templateName = currentPage.template || pageParams.template || sectionTemplate || config.defaultTemplate;
+
+        console.log('[App] Template Selection Logic:', {
+            path,
+            firstSegment,
+            'config.sections': config.sections,
+            sectionTemplate,
+            'pageParams.template': pageParams.template,
+            'currentPage.template': currentPage.template,
+            'config.defaultTemplate': config.defaultTemplate,
+            'FINAL DECISION': templateName
+        });
+
         const Template = await loadTemplate(templateName);
 
         // Render the content
