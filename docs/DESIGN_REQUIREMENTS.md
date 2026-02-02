@@ -61,19 +61,19 @@ The system operates as a **zeroless-build** Single Page Application (SPA). "Zero
 *   **Caching**: Implement aggressive client-side caching to prevent fetching the same Markdown file multiple times.
 *   **Rate Limits**: Gracefully handle potential GitHub API rate limits.
 
-## 5. Extension Policy: Code vs. Content
+## 5. Extension Policy & Security
 
-### 5.1 Primary Policy: Separation of Concerns
-To maintain security and simplicity, the **Content Repository** should ideally contain *only* content (Markdown, Images, JSON configuration). The **Engine Repository** contains the executable code.
+### 5.1 Content Sanitization (Implemented)
+To prevent Cross-Site Scripting (XSS) from untrusted content, the engine strictly sanitizes all rendered Markdown and HTML.
+*   **Mechanism**: Uses `rehype-sanitize` to strip `<script>`, `<iframe>`, `<object>`, and dangerous attributes (e.g., `onload`, `javascript:` links).
+*   **Configuration**: 
+    *   `allowScripts: false` (Default) -> Sanitization Enabled.
+    *   `allowScripts: true` (Opt-in) -> Sanitization Disabled. USE WITH CAUTION.
 
-### 5.2 Advanced Policy: Script Injection (Optional)
-For advanced users who need custom logic (e.g., a specific calculator widget for one page) without forking the Engine:
-*   **Mechanism**: The Engine *may* optionally load a `custom.js` file from the Content Repository if enabled in config.
-*   **Security Warning**: This introduces **Cross-Site Scripting (XSS)** risks if the Content Repository is not strictly controlled.
-*   **Recommendation**:
-    *   **Default**: Disabled.
-    *   **Enterprise/Trusted Mode**: Allowed only if the user explicitly opts-in via a build-time flag, acknowledging the risk.
-    *   **Sandboxing**: Ideally, custom components should run in an isolated environment (like an iframe or Shadow DOM) to prevent access to the main application state.
+### 5.2 Code vs. Content Separation
+*   **Content Repo**: Contains *static* assets (Markdown, JSON, Images).
+*   **Engine**: Contains *executable* logic (React components, Templates).
+*   **Policy**: The engine DOES NOT load or execute .js files referenced in the Content Repo unless `allowScripts` is strictly enabled and logic is added to support it (currently scope is limited to inline HTML scripts).
 
 ## 6. Use Cases
 

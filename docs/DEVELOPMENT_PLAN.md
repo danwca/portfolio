@@ -48,3 +48,9 @@ The current codebase is a strong foundation but specialized for a single-folder 
 ## 3. Immediate Next Steps
 1.  **Refactor `getPathFromUrl`** in `src/App.js` to support multi-folder routing.
 2.  **Create `src/templates/Article.js`** as a proof-of-concept for the Documentation use case.
+## 6. Suggestions for Next Revision (v0.3.0+)
+1.  **Search Functionality**: Implement client-side search (using Lunr.js or FlexSearch) to index the fetched content.
+2.  **SEO Improvements**: Dynamically update `<meta>` tags (description, og:image) based on the current page's Frontmatter.
+3.  **Performance Check**: Implement code-splitting for Template components to correct the "loading all templates" behavior if it exists.
+4.  **Offline Support**: Turn the app into a PWA (Progressive Web App) to allow reading documentation offline.
+5.  **Commenting**: Integrate a lightweight commenting system (like Giscus or Utterances) for the Blog section.
