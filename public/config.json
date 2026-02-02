@@ -1,8 +1,21 @@
 {
   "defaultTemplate": "default",
-  "docsfolder": "/docs",
   "repository": "portfolio",
   "githubaccount": "danwca",
   "defaultTitle": "My Portfolio",
+  "sections": {
+    "docs": {
+      "folder": "docs",
+      "template": "Article"
+    },
+    "blog": {
+      "folder": "posts",
+      "template": "SectionIndex"
+    },
+    "": {
+      "folder": "docs",
+      "template": "default"
+    }
+  },
   "homefile": "README.md"
 }

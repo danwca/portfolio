@@ -2,10 +2,16 @@
 
 1. https://jekyllrb.com/showcase/， Transform your plain text into static websites and blogs.
 various styles， https://jamstackthemes.dev/
-2. [YAML](https://en.wikipedia.org/wiki/YAML),  (/ˈjæməl/ ⓘ; see § History and name) is a human-readable data serialization language. It is commonly used for configuration files and in applications where data is being stored or transmitted. YAML targets many of the same communications applications as Extensible Markup Language (XML) but has a minimal syntax that intentionally differs from Standard Generalized Markup Language (SGML).[
+2. [YAML](https://en.wikipedia.org/wiki/YAML),  (/ˈjæməl/ ⓘ; see § History and name) is a human-readable data serialization language. It is commonly used for configuration files and in applications where data is being stored or transmitted. YAML targets many of the same communications applications as Extensible Markup Language (XML) but has a minimal syntax that intentionally differs from Standard Generalized Markup Language (SGML).
 3. [Ruby](https://rubyonrails.org/), 
 
 
 #### about Jekyll
 1. conver markdown file in a Github's repository into a web page. for example, [Quickstart](https://jekyllrb.com/docs/) page is corresponding to [index.md](https://github.com/jekyll/jekyll/blob/master/docs/_docs/index.md) under `jekyll/docs/_docs/` of jekyll-Github;  screenshots for ![Quickstart](250320143318.jpg), [index.md](250320143456.jpg)
+
+
+#### comments
+1. how to know how convert a plain text into static websites to understand why need jekyll and how it works.
+2. too many weird terms: Jekyll, YAML, Ruby, etc. none of them can lead to plain text and website directly. Ruby is a computer language, and YAML and Jekyll?
+3. why need Jekyll? what's benefit to use Jekyll? what's other options? what's relationship between Jekyll and Github gh-pages, or Jekyll and Portfolio (this project)? 
 
