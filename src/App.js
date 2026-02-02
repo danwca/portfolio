@@ -9,6 +9,7 @@ import { getRepoFileUrl } from './utils/github'; // Import the function
 import { config } from './utils/config'; // Import the config
 import { fetchNavigation } from './utils/navigation'; // Import navigation
 import rehypeRaw from 'rehype-raw';
+import fm from 'front-matter'; // Import front-matter parser
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -266,10 +267,16 @@ export const initApp = async () => {
             throw new Error('Markdown file is empty or invalid');
         }
 
-        const markdownContent = await processMarkdownLinks(response.data, path);
+        // Parse Frontmatter
+        const parsedContent = fm(response.data);
+        const frontmatter = parsedContent.attributes;
+        const markdownBody = parsedContent.body;
+
+        const markdownContent = await processMarkdownLinks(markdownBody, path);
 
         // Parse into pages first
         const pages = parseMarkdown(markdownContent);
+
 
         // Get requested page ID from URL (either hash or query param)
         const urlParams = new URLSearchParams(window.location.search);
@@ -284,10 +291,12 @@ export const initApp = async () => {
         // Now parse the current page's content into sections
         const sections = parsePageContent(currentPage.content);
 
+
         // Rest of your existing initApp logic...
-        let pageParams = {};
+        let pageParams = { ...frontmatter }; // Initialize with frontmatter attributes
         const renderedSections = [];
         let index = 0;
+
 
         for (const section of sections) {
             if (section.type === 'markdown') {

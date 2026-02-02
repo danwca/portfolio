@@ -56,33 +56,44 @@ const parseTree = (treeData) => {
 };
 
 export const fetchNavigation = async (sectionPath) => {
+    console.log(`[Navigation] Fetching for section: "${sectionPath}"`);
     // 1. Try to fetch _sidebar.md
     try {
-        const sidebarUrl = await getRepoFileUrl(`${sectionPath}/_sidebar.md`);
+        // Fix for logic: if sectionPath is empty (root), path should be just "_sidebar.md"
+        // If sectionPath is "docs", path should be "docs/_sidebar.md"
+        // But getRepoFileUrl might handle prefixes.
+        // Let's use robust concatenation.
+        const sidebarPath = sectionPath ? `${sectionPath}/_sidebar.md` : '_sidebar.md';
+        const sidebarUrl = await getRepoFileUrl(sidebarPath);
+        console.log(`[Navigation] Sidebar URL: ${sidebarUrl}`);
+
         const response = await axios.get(sidebarUrl);
         if (response.data) {
+            console.log(`[Navigation] Sidebar found.`);
             return {
                 type: 'sidebar',
                 items: parseSidebar(response.data)
             };
         }
     } catch (e) {
-        // Find sidebar failed, proceed to fallback
-        // console.warn("Sidebar not found, falling back to Tree API");
+        console.warn(`[Navigation] Sidebar not found at ${sectionPath || 'root'}/_sidebar.md`);
     }
 
     // 2. Fallback: GitHub Tree API
     try {
         const treeApiUrl = await getRepoTree(sectionPath);
+        console.log(`[Navigation] Tree API URL: ${treeApiUrl}`);
+
         const response = await axios.get(treeApiUrl);
         if (response.data) {
+            console.log(`[Navigation] Tree data fetched:`, response.data);
             return {
                 type: 'auto',
                 items: parseTree(response.data)
             };
         }
     } catch (e) {
-        console.error("Failed to fetch navigation tree", e);
+        console.error("[Navigation] Failed to fetch tree:", e);
         return { type: 'none', items: [] };
     }
 

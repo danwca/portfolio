@@ -1,5 +1,6 @@
 ---
 title: Article Template Demo
+template: Article
 ---
 
 # Demonstrating the Article Template
