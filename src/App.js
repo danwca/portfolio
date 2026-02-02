@@ -7,6 +7,7 @@ import { createRoot } from 'react-dom/client'; // Use createRoot from react-dom/
 import store from './store/theme'; // Ensure the Redux store is imported
 import { getRepoFileUrl } from './utils/github'; // Import the function
 import { config } from './utils/config'; // Import the config
+import { fetchNavigation } from './utils/navigation'; // Import navigation
 import rehypeRaw from 'rehype-raw';
 
 // Dynamic template loading
@@ -364,9 +365,16 @@ export const initApp = async () => {
         // Determine the current section from URL path
         // (We need to do this again or reuse logic, simple way is to check path prefix)
         // Note: 'path' here is the virtual path from URL (e.g. docs/intro)
+
+        // Determine the current section from URL path
         const parts = path.split('/');
         const firstSegment = parts[0];
         let sectionTemplate = null;
+
+        // Fetch Navigation for this section
+        // We pass the "virtual" section path (e.g., "docs")
+        // The nav utility will use getRepoFileUrl/getRepoTree to resolve it.
+        const navigationData = await fetchNavigation(firstSegment || "");
 
         if (config.sections) {
             if (config.sections[firstSegment]) {
@@ -390,7 +398,12 @@ export const initApp = async () => {
         const root = createRoot(document.getElementById('root'));
         root.render(
             <Provider store={store}>
-                <Template variables={{ ...pageParams, currentPageId: currentPage.id, totalPages: pages.length }}>
+                <Template variables={{
+                    ...pageParams,
+                    currentPageId: currentPage.id,
+                    totalPages: pages.length,
+                    navigation: navigationData // Pass navigation data
+                }}>
                     {renderedSections.map((section, index) => (
                         <React.Fragment key={index}>
                             {section.content}
@@ -402,7 +415,23 @@ export const initApp = async () => {
 
     } catch (error) {
         console.error('Error loading markdown file:', error);
-        // Your existing error handling...
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(
+            <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
+                <h1>404 - Content Not Found</h1>
+                <p>Unable to fetch the content for this page.</p>
+                <p style={{ color: '#666', fontSize: '0.9em' }}>
+                    Error: {error.message}
+                </p>
+                <p>
+                    <strong>Note:</strong> Since this application fetches content from GitHub,
+                    ensure that the file <code>{path}</code> exists in the <code>main</code> branch of your repository.
+                    <br />
+                    Newly created local files must be pushed to GitHub to be visible.
+                </p>
+            </div>
+        );
     }
 };
 

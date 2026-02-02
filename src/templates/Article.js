@@ -12,7 +12,7 @@ import rehypeRaw from 'rehype-raw';
  * - Placeholder for Sidebar (Phase 3)
  */
 const ArticleTemplate = ({ children, variables }) => {
-    const { currentPageId, title } = variables;
+    const { currentPageId, title, navigation } = variables;
 
     // Simple breadcrumb logic (mockup)
     const breadcrumbs = [
@@ -27,14 +27,30 @@ const ArticleTemplate = ({ children, variables }) => {
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ display: 'flex', gap: 4 }}>
-                {/* Sidebar Placeholder (Left) */}
+                {/* Sidebar (Left) */}
                 <Box sx={{ width: '250px', display: { xs: 'none', md: 'block' }, borderRight: '1px solid #ddd' }}>
                     <Typography variant="h6" gutterBottom>
                         Contents
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        (Sidebar content will be dynamic in Phase 3)
-                    </Typography>
+
+                    {navigation && navigation.items && (
+                        <nav>
+                            <ul style={{ listStyle: 'none', padding: 0 }}>
+                                {navigation.items.map((item, idx) => (
+                                    <li key={idx} style={{ marginBottom: '8px' }}>
+                                        <Link href={item.path} underline="hover" color="text.primary">
+                                            {item.title}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                            {navigation.type === 'auto' && (
+                                <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+                                    (Auto-generated)
+                                </Typography>
+                            )}
+                        </nav>
+                    )}
                 </Box>
 
                 {/* Main Content (Right) */}

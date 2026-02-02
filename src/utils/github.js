@@ -65,3 +65,51 @@ export async function getRepoFileUrl(path) {
 
     return repoFileUrl;
 }
+
+export async function getRepoTree(path) {
+    const { repository, githubaccount, sections } = await config;
+
+    // Resolve the section folder for this path
+    // Reuse the getRepoFileUrl logic or separate it?
+    // We need the ACTUAL repo folder name to query the Tree API.
+
+    // Simple logic: 
+    // If path matches a section key, use that section's folder.
+    // Else use path as is?
+
+    // Actually, getRepoFileUrl does "URL Path" -> "Repo Path".
+    // We need "URL Path" -> "Repo Path" here too.
+
+    // Let's refactor the resolution logic if we can, but for now duplicate/adapt:
+    const normalizePath = (p) => p.replace(/^\/+|\/+$/g, '').trim();
+    const normalizedPath = normalizePath(path);
+
+    let repoPath = normalizedPath;
+
+    if (sections) {
+        const parts = normalizedPath.split('/');
+        const firstSegment = parts[0];
+        if (firstSegment && sections[firstSegment]) {
+            const sec = sections[firstSegment];
+            const folder = typeof sec === 'string' ? sec : sec.folder;
+            parts[0] = normalizePath(folder);
+            repoPath = parts.join('/');
+        } else if (sections[""]) {
+            const sec = sections[""];
+            const folder = typeof sec === 'string' ? sec : sec.folder;
+            repoPath = `${normalizePath(folder)}/${normalizedPath}`;
+        }
+    }
+
+    // Clean
+    repoPath = repoPath.replace(/\/+/g, '/');
+
+    // GitHub Tree API: https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}:{path}?recursive=1
+    // Note: The format for getting a specific folder's tree is slightly complex. 
+    // It's often easier to get the main tree and filter, OR use the Content API if separate calls are okay (but Tree is better for recursive).
+    // Let's use the Contents API for simplicity first? No, Tree is requested for "Auto Discovery".
+    // The Tree API URL is `.../git/trees/main:{repoPath}` assuming main branch.
+
+    const apiUrl = `https://api.github.com/repos/${githubaccount}/${repository}/git/trees/main:${repoPath}?recursive=1`;
+    return apiUrl;
+}

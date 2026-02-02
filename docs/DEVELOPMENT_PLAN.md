@@ -7,9 +7,9 @@ The current codebase is a strong foundation but specialized for a single-folder 
 | :--- | :--- | :--- | :--- |
 | **Configuration** | Flat defaults (`docsfolder`, `homefile`). | Section-based (`sections: { "blog": "posts/" }`). | **RESOLVED** (v26020101) |
 | **Routing** | Simple path stripping. Assumes one root. | Section-aware. Must map URL prefix to different repo folders. | **RESOLVED** (v26020101) |
-| **Templates** | `default` and `portfolio`. | `Home`, `Article`, `Blog`, `Book`. | **Medium**: Need new template files. |
-| **Template Logic** | Page > Global Default. | Page > Section Default > Global Default. | **Medium**: Update `App.js` resolution logic. |
-| **Navigation** | Hardcoded/Manual Links. | Auto-generated Sidebars (for Books/Docs). | **Critical**: Raw API cannot list files. Need a strategy (Sidebars.md vs GitHub Tree API). |
+| **Templates** | `default` and `portfolio`. | `Home`, `Article`, `Blog`, `Book`. | **RESOLVED** (v26020102) |
+| **Template Logic** | Page > Global Default. | Page > Section Default > Global Default. | **RESOLVED** (v26020102) |
+| **Navigation** | Hardcoded/Manual Links. | Auto-generated Sidebars (for Books/Docs). | **RESOLVED** (v26020103) |
 
 ## 2. Phased Implementation Plan
 

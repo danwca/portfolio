@@ -45,6 +45,12 @@ The system operates as a **zeroless-build** Single Page Application (SPA). "Zero
 *   **Home Page Distinction**: The root URL (`/`) often requires a vastly different layout (Landing Page) compared to internal content pages. The engine must support a dedicated `Home` template.
 *   **Layout Choice**: Pages must be able to override their section's default template via metadata (e.g., `<!-- page { "template": "landing" } -->`).
 
+### 3.5 Navigation & Discovery
+*   **Dual Strategy**: To support both curated and auto-discovered content, the system employs a two-layer strategy:
+    1.  **Curated (`_sidebar.md`)**: Checks for a `_sidebar.md` file in the section root. If present, it renders this as the authoritative menu. This allows manual ordering and grouping.
+    2.  **Auto-Discovery (GitHub Tree API)**: If no sidebar exists, the system falls back to the **GitHub Tree API**. It fetches the file tree for the section's folder and auto-generates a navigation menu based on the directory structure.
+*   **Fallback Justification**: The Tree API provides a "magic" zero-config experience (just add files), while the Sidebar provides necessary control for professional publications.
+
 ## 4. Non-Functional Requirements
 
 ### 4.1 Deployment & Maintenance

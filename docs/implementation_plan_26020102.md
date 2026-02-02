@@ -27,3 +27,8 @@ Updated `sections` to use object schema:
 ## 3. Verification
 *   **Scenario 1**: Visiting `/docs/...` -> `App.js` sees section "docs" -> config says `template: "Article"` -> Loads `Article` template.
 *   **Scenario 2**: Visiting `/` -> `App.js` sees section "" -> config says `template: "default"` -> Loads `default` template.
+
+## 4. Requirement for Verification
+Since the application fetches content from GitHub, the new template files (`docs/article_demo.md`, `posts/index.md`) **must be pushed to the repository** before they can be loaded by the application.
+*   **Error Observed**: `404 - Content Not Found`.
+*   **Resolution**: Run `git push` to make files available to the GitHub API.
