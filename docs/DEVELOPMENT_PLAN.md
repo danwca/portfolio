@@ -42,6 +42,8 @@ The current codebase is a strong foundation but specialized for a single-folder 
 **Goal**: Security.
 *   Add `allowScripts` flag to config.
 *   If `false` (default), simply do not load any `.js` files from the content repo, only `.md` / `.json`.
+*   **Impl**: Implemented `rehype-sanitize` to strip scripts from Markdown/HTML. 
+    **RESOLVED** (v26020104)
 
 ## 3. Immediate Next Steps
 1.  **Refactor `getPathFromUrl`** in `src/App.js` to support multi-folder routing.

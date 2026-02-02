@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getRepoFileUrl, getRepoTree } from './github';
+import { config } from './config';
 
 /**
  * Navigation Utility
@@ -27,7 +28,7 @@ const parseSidebar = (markdown) => {
 };
 
 // Parse GitHub Tree API response into a structured array
-const parseTree = (treeData) => {
+const parseTree = (treeData, repoFolder, sectionKey) => {
     // treeData.tree is an array of objects: { path, mode, type, sha, size, url }
     // type: "blob" (file) or "tree" (folder)
 
@@ -42,12 +43,31 @@ const parseTree = (treeData) => {
         const filename = parts[parts.length - 1];
         const title = filename.replace('.md', '').split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
+        // Path Rewrite Logic: Repo Path -> URL Path
+        // If repoFolder is "docs" and sectionKey is "", "docs/foo.md" -> "foo.md"
+        // If repoFolder is "posts" and sectionKey is "blog", "posts/bar.md" -> "blog/bar.md"
+
+        let linkPath = item.path;
+        if (repoFolder) {
+            // Create a regex to replace the folder prefix at the start of the string
+            const prefixRegex = new RegExp(`^${repoFolder}/`);
+            if (sectionKey) {
+                // Replace "folder/" with "section/"
+                linkPath = linkPath.replace(prefixRegex, `${sectionKey}/`);
+            } else {
+                // Section is root, just remove "folder/"
+                linkPath = linkPath.replace(prefixRegex, '');
+            }
+        }
+
+        // Ensure leading slash for absolute routing
+        if (!linkPath.startsWith('/')) {
+            linkPath = '/' + linkPath;
+        }
+
         nav.push({
             title: title,
-            path: item.path, // This is the repo path. We might need to map it back to URL path??
-            // Wait, if we use Tree API, we get "docs/intro.md".
-            // The app expects URL paths. 
-            // If the section "docs" maps to "docs" folder, then URL "docs/intro.md" works.
+            path: linkPath,
             type: 'link'
         });
     });
@@ -56,7 +76,25 @@ const parseTree = (treeData) => {
 };
 
 export const fetchNavigation = async (sectionPath) => {
+    const resolvedConfig = await config;
     console.log(`[Navigation] Fetching for section: "${sectionPath}"`);
+
+    // Resolve the repo folder for this section to help with path rewriting
+    let repoFolder = null;
+    if (resolvedConfig.sections) {
+        if (resolvedConfig.sections[sectionPath]) {
+            const sec = resolvedConfig.sections[sectionPath];
+            repoFolder = typeof sec === 'string' ? sec : sec.folder;
+        } else if (sectionPath === "" && resolvedConfig.sections[""]) {
+            const sec = resolvedConfig.sections[""];
+            repoFolder = typeof sec === 'string' ? sec : sec.folder;
+        }
+    } else {
+        // Legacy fallback
+        repoFolder = resolvedConfig.docsfolder;
+    }
+
+
     // 1. Try to fetch _sidebar.md
     try {
         // Fix for logic: if sectionPath is empty (root), path should be just "_sidebar.md"
@@ -89,7 +127,7 @@ export const fetchNavigation = async (sectionPath) => {
             console.log(`[Navigation] Tree data fetched:`, response.data);
             return {
                 type: 'auto',
-                items: parseTree(response.data)
+                items: parseTree(response.data, repoFolder, sectionPath)
             };
         }
     } catch (e) {

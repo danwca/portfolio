@@ -34,7 +34,11 @@ Implement security guardrails to prevent Cross-Site Scripting (XSS) from untrust
 *   **Test A (Sanitized)**:
     1.  Content: `docs/xss_test.md` containing `<script>alert("XSS")</script>` and `<img onerror="alert(1)" src=x>`.
     2.  Config: `allowScripts: false`.
-    3.  Result: No alert. HTML is stripped or encoded.
+    3.  Result: **PASSED**. No alert. HTML stripped. Links neutralized.
 *   **Test B (Unsanitized)**:
     1.  Config: `allowScripts: true`.
-    2.  Result: Alert executes (or image error triggers).
+    2.  Result: **SKIPPED** (User opted for immediate security confirmation).
+
+## 5. Conclusion
+The engine is now secured by default using `rehype-sanitize`.
+
