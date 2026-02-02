@@ -375,6 +375,7 @@ export const initApp = async () => {
         // We pass the "virtual" section path (e.g., "docs")
         // The nav utility will use getRepoFileUrl/getRepoTree to resolve it.
         const navigationData = await fetchNavigation(firstSegment || "");
+        console.log('[App] Navigation Data:', navigationData);
 
         if (config.sections) {
             if (config.sections[firstSegment]) {

@@ -13,6 +13,7 @@ import rehypeRaw from 'rehype-raw';
  */
 const ArticleTemplate = ({ children, variables }) => {
     const { currentPageId, title, navigation } = variables;
+    console.log('[ArticleTemplate] Navigation Prop:', navigation);
 
     // Simple breadcrumb logic (mockup)
     const breadcrumbs = [
