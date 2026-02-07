@@ -73,6 +73,7 @@ Everything you see here is generated from a single markdown file!
 ---
 title: About Me
 id: about
+showNavigation: false  
 layout: about-card
 data:
   aboutMe: "Hi Everyone, I am Daniel Wang from Toronto, Canada. I have worked with libraries & frameworks like ReactJS, NodeJS, and have keen knowledge of databases like MySQL, MongoDB and Firebase. Eager to contribute to innovative projects and gain hands-on experience in a dynamic and collaborative environment."
