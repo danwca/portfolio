@@ -2,6 +2,7 @@
 type: settings
 defaultTemplate: portfolio
 defaultLayout: hero-split
+showNavigation: false  # Hide navigation on this page
 sharedData:
   firstName: Daniel
   lastName: Wang
