@@ -1,6 +1,6 @@
 {
   "name": "personal-portfolio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -64,6 +64,7 @@
     ]
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "gh-pages": "^5.0.0",
     "react-app-rewired": "^2.2.1"
   },

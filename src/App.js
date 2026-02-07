@@ -11,6 +11,16 @@ import { fetchNavigation } from './utils/navigation'; // Import navigation
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import fm from 'front-matter'; // Import front-matter parser
+import {
+    parseMarkdownFile,
+    mergePageConfig,
+    parseSections,
+    parseComponents,
+    interpolateVariables,
+    resolveComponentProps
+} from './utils/markdownParser';
+import { loadComponent as loadRegistryComponent, validateComponentProps } from './components/registry/ComponentRegistry';
+import { initAppEnhanced } from './initAppEnhanced';
 
 // Dynamic template loading
 const loadTemplate = async (templateName) => {
@@ -21,18 +31,6 @@ const loadTemplate = async (templateName) => {
         console.warn(`No custom driver for template ${templateName}, using global default.`);
         const globalDefault = await import('./templates/default.js');
         return globalDefault.default;
-    }
-};
-
-
-// Dynamic component loading
-const loadComponent = async (componentPath) => {
-    try {
-        const module = await import(`./components/${componentPath}`);
-        return module.default;
-    } catch (error) {
-        console.error(`Error loading component ${componentPath}:`, error);
-        return null;
     }
 };
 
@@ -483,11 +481,8 @@ const App = () => {
     });
 
     useEffect(() => {
-        // Extract the path from the URL
-        //const path = getPathFromUrl();
-
-        // Initialize the app with the path
-        initApp();
+        // Initialize the app with enhanced parser
+        initAppEnhanced();
     }, []);
 
     return (
