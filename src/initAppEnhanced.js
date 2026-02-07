@@ -145,9 +145,19 @@ const renderComponentParts = async (parts, data) => {
     return rendered;
 };
 
+// Cache the root instance to avoid creating multiple roots
+let appRoot = null;
+
 // NEW Enhanced initApp function
 export const initAppEnhanced = async () => {
-    const path = window.location.pathname.replace(new RegExp(`^/${config.repository}`), '').replace(/^\//, '') || config.homefile || 'README.md';
+    // Extract path from URL
+    let path = window.location.pathname.replace(new RegExp(`^/${config.repository}`), '').replace(/^\//, '') || config.homefile || 'README.md';
+
+    // Automatically append .md extension if missing
+    if (!path.endsWith('.md')) {
+        path = path + '.md';
+    }
+
     const RepoFileUrl = await getRepoFileUrl(path);
 
     try {
@@ -199,12 +209,17 @@ export const initAppEnhanced = async () => {
         const renderedSections = {};
         for (const [sectionName, sectionContent] of Object.entries(sections)) {
             const parts = parseComponents(sectionContent);
+            console.log(`[Enhanced Parser] Section ${sectionName} has ${parts.length} parts:`, parts);
             renderedSections[sectionName] = await renderComponentParts(parts, data);
+            console.log(`[Enhanced Parser] Section ${sectionName} rendered:`, renderedSections[sectionName]);
         }
 
         // Render main content
         const mainParts = parseComponents(mainContent);
+        console.log(`[Enhanced Parser] Main content has ${mainParts.length} parts:`, mainParts);
         const renderedMain = await renderComponentParts(mainParts, data);
+        console.log(`[Enhanced Parser] Rendered main content:`, renderedMain);
+        console.log(`[Enhanced Parser] Rendered main length:`, renderedMain.length);
 
         // Update document title
         document.title = pageConfig.title || config.defaultTitle || 'My Portfolio';
@@ -219,15 +234,18 @@ export const initAppEnhanced = async () => {
         const sectionKey = (config.sections && config.sections[firstSegment]) ? firstSegment : '';
         const navigationData = await fetchNavigation(sectionKey);
 
-        // Render the page
-        const root = createRoot(document.getElementById('root'));
-        root.render(
+        // Render the page (reuse root if it exists)
+        if (!appRoot) {
+            appRoot = createRoot(document.getElementById('root'));
+        }
+        appRoot.render(
             <Provider store={store}>
                 <Template
                     variables={{
                         ...pageConfig,
                         currentPageId: currentPage.id,
                         totalPages: pages.length,
+                        pages: pages,
                         navigation: navigationData,
                         layout: pageConfig.layout
                     }}
@@ -243,8 +261,10 @@ export const initAppEnhanced = async () => {
     } catch (error) {
         console.error('Error loading markdown file:', error);
 
-        const root = createRoot(document.getElementById('root'));
-        root.render(
+        if (!appRoot) {
+            appRoot = createRoot(document.getElementById('root'));
+        }
+        appRoot.render(
             <div style={{ padding: '40px', textAlign: 'center', fontFamily: 'sans-serif' }}>
                 <h1>404 - Content Not Found</h1>
                 <p>Unable to fetch the content for this page.</p>

@@ -62,6 +62,16 @@ export const componentRegistry = {
             color: { type: 'string', default: 'primary', description: 'Highlight color' }
         },
         description: 'Highlighted text span component'
+    },
+
+    PageNavigation: {
+        component: null,
+        path: 'PageNavigation/PageNavigation',
+        props: {
+            pages: { type: 'array', required: false, description: 'Array of page objects' },
+            currentPageId: { type: 'string', required: false, description: 'Current page ID' }
+        },
+        description: 'Multi-page navigation tabs component'
     }
 };
 
@@ -85,11 +95,13 @@ export const loadComponent = async (componentName) => {
 
     // Load component dynamically
     try {
-        const module = await import(`../components/${registration.path}`);
+        console.log(`[ComponentRegistry] Loading component ${componentName} from ../${registration.path}`);
+        const module = await import(`../${registration.path}`);
         registration.component = module.default;
+        console.log(`[ComponentRegistry] Successfully loaded ${componentName}:`, registration.component);
         return registration.component;
     } catch (error) {
-        console.error(`Error loading component ${componentName} from ${registration.path}:`, error);
+        console.error(`[ComponentRegistry] Error loading component ${componentName} from ${registration.path}:`, error);
         return null;
     }
 };

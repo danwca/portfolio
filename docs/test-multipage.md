@@ -140,7 +140,7 @@ layout: full-width
 ---
 title: Contact
 id: contact
-template: contact
+template: portfolio
 layout: form-center
 ---
 

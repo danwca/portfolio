@@ -1,0 +1,43 @@
+.content-wrapper {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-hero-left,
+.section-hero-right,
+.section-main {
+    margin: 20px 0;
+    padding: 20px;
+}
+
+/* Hero sections side-by-side on larger screens */
+@media (min-width: 768px) {
+    .content-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .section-hero-left {
+        grid-column: 1;
+    }
+
+    .section-hero-right {
+        grid-column: 2;
+    }
+
+    .section-main {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Mobile: stack sections vertically */
+@media (max-width: 767px) {
+
+    .section-hero-left,
+    .section-hero-right,
+    .section-main {
+        width: 100%;
+    }
+}
